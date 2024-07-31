@@ -318,9 +318,8 @@ Tool:
 •	MatchPairedEndSeq [ref]
 
 Output:
-Directory	File	Description
-/tmp	<sample>.R1.paired.fq
-<sample>.R2.paired.fq	Matched paired FASTQ files
+|Directory|File|Description|
+|/tmp|sample.R1.paired.fq, sample.R2.paired.fq|Matched paired FASTQ files|
 
 
 5. Mapping with STAR
@@ -350,24 +349,18 @@ Samtools
 •	-f 0x2, -F 0x104, -f 0x40, -f 0x80: Filters reads based on flags to select properly mapped reads and exclude non-primary alignments and unmapped reads.
 
 Outputs:
-Directory	File	Description
-/map	<sample>.bam	Aligned BAM file
-/map	<sample>.mapq10.bam	Aligned BAM file filtered with Samtools
-/map	<sample>.R1.mapq10.bam
-<sample>.R1.mapq10.bam.bai
-<sample>.R2.mapq10.bam	Sorted and indexed BAM files for R1 and R2 reads
-/map	<sample>.Unmapped.out.mate1
-<sample>.Unmapped.out.mate2	Unmapped reads in Fastx format
-summary/	<sample>.R1.top100_unmapped.txt
-<sample>.R2.top100_unmapped.txt
-<sample>.R1.top100_mapped.txt
-<sample>.R2.top100_mapped.txt
-	Top 100 sequences from mapped and unmapped files
-/log	<sample>.Log.final.out	Statistics from STAR: Number of input reads, % Uniquely mapped reads, of reads mapped to multiple loci, % of reads mapped to too many loci, % of reads unmapped: too many mismatches, % of reads unmapped: too short, % of reads unmapped: other
-/log	<sample>.Log.out	Description of the execution of the STAR, including command line parameters, initial and final user parameters, effective command line, genome generation parameters and genome information.
-/log
-	<sample>.Log.progress.out	time-stamped record of progress during a process
-/log	<sample>.SJ.out.tab	List of the splice junctions detected during the alignment process. The columns are as follow:   Chromosome: Chromosomal location of the splice junction; Start: Starting position of the splice junction; End: Ending position of the splice junction; Strand: Orientation of the splice junction; Intron Motif: Represents the splice junction's motif, with "0" indicating unknown motif; Support: Number of reads supporting the splice junction; Annotated: Indicates whether the splice junction is annotated or novel.; Unique: Indicates whether the splice junction is unique or shared; Overhang: Length of the overhang.
+|Directory|File|Description|
+|----|----|----|
+|/map|sample.bam|Aligned BAM file
+|/map|sample.mapq10.bam|Aligned BAM file filtered with Samtools
+|/map|sample.R1.mapq10.bam, sample.R1.mapq10.bam.bai, sample.R2.mapq10.bam|Sorted and indexed BAM files for R1 and R2 reads
+|/map|sample.Unmapped.out.mate1, sample.Unmapped.out.mate2|Unmapped reads in Fastx format
+|summary/|sample.R1.top100_unmapped.txt, sample.R2.top100_unmapped.txt, sample.R1.top100_mapped.txt, sample.R2.top100_mapped.txt|Top 100 sequences from mapped and unmapped files
+|/log|sample.Log.final.out|Statistics from STAR: Number of input reads, % Uniquely mapped reads, of reads mapped to multiple loci, % of reads mapped to too many loci, % of reads unmapped: too many mismatches, % of reads unmapped: too short, % of reads unmapped: other
+|/log|sample.Log.out|Description of the execution of the STAR, including command line parameters, initial and final user parameters, effective command line, genome generation parameters and genome information.
+|/log|sample.Log.progress.out|time-stamped record of progress during a process
+|/log|sample.SJ.out.tab|List of the splice junctions detected during the alignment process. The columns are as follow:   Chromosome: Chromosomal location of the splice junction; Start: Starting position of the splice junction; End: Ending position of the splice junction; Strand: Orientation of the splice junction; Intron Motif: Represents the splice junction's motif, with "0" indicating unknown motif; Support: Number of reads supporting the splice junction; Annotated: Indicates whether the splice junction is annotated or novel.; Unique: Indicates whether the splice junction is unique or shared; Overhang: Length of the overhang.
+
 Of note, since in STAR, paired-end reads are treated as a single read,  the paired-end reads are counted as a single read in the uniquely mapped reads number. The uniquely mapped reads number also includes reads in which only one of the paired-end reads is uniquely mapped.  The file containing the top 100 sequences from mapped and unmapped files was generated.
 
 
@@ -430,19 +423,13 @@ Parameters:
 •	-s: Enforcing same strandedness
 
 Outputs:
-Directory	File	Description
-tmp/	<sample>.R1.ctss.bed	CTSS file containing TSSs with Corrected Counts > 0.
-tmp/intersect	<sample>.R1.ctss.3UTR_exon.bed
-<sample>.R1.ctss.5UTR_exon.bed
-<sample>.R1.ctss.coding_exon.bed
-<sample>.R1.ctss.downstream100.bed
-<sample>.R1.ctss.intergenic.bed
-<sample>.R1.ctss.intron.bed
-<sample>.R1.ctss.upstream100.bed	Each BED file contains the TSSs that overlap with regions stored as BED files in /usr/local/reference/hierarchical_intersect.
-All remaining TSSs not found in any of these annotation BED files, will be stored in <sample>.R1.ctss.intergenic.bed
-summary/	promoter_counts.txt	Sum of the read counts for each region: upstream100, 5UTR_exon, coding_exon, 3UTR_exon, intron, downstream100, intergenic and total for each sample of the dataset.
-figs/	promoter_counts.pdf	Bar plot with stacked bars, where each bar represents the count of promoters for different types of regions (e.g.,Intergenic, Downstream 100bp, Intron, etc.) across all samples.
-figs/	promoter_percent.pdf	Bar plot with stacked bars, where each bar represents the percentage distribution of promoters for different types of regions.
+|Directory|File|Description|
+|----|----|----|
+|tmp/|sample.R1.ctss.bed|CTSS file containing TSSs with Corrected Counts > 0.
+|tmp/intersect|sample.R1.ctss.3UTR_exon.bed, sample.R1.ctss.5UTR_exon.bed, sample.R1.ctss.coding_exon.bed, sample.R1.ctss.downstream100.bed, sample.R1.ctss.intergenic.bed, sample.R1.ctss.intron.bed, sample.R1.ctss.upstream100.bed|Each BED file contains the TSSs that overlap with regions stored as BED files in /usr/local/reference/hierarchical_intersect. All remaining TSSs not found in any of these annotation BED files, will be stored in sample.R1.ctss.intergenic.bed
+|summary/|promoter_counts.txt|Sum of the read counts for each region: upstream100, 5UTR_exon, coding_exon, 3UTR_exon, intron, downstream100, intergenic and total for each sample of the dataset.
+|figs/|promoter_counts.pdf|Bar plot with stacked bars, where each bar represents the count of promoters for different types of regions (e.g.,Intergenic, Downstream 100bp, Intron, etc.) across all samples.
+|figs/|promoter_percent.pdf|Bar plot with stacked bars, where each bar represents the percentage distribution of promoters for different types of regions.
 
 
 8. Analysis of Paired BAM files
@@ -462,10 +449,10 @@ o	-u : (unique) Reporting the mere presence of any overlapping features
 o	-s: Enforcing same strandedness
 
 Outputs:
-Directory	File	Description
-map/	<sample>.bed	BED12 file where the start position is the 5’' end of Read 1 and the end position is the 3' end of read 2. Columns 7-8 (thick coordinates) indicate where the contribution of read 1.
+|Directory|File|Description
+|map/|sample.bed|BED12 file where the start position is the 5’' end of Read 1 and the end position is the 3' end of read 2. Columns 7-8 (thick coordinates) indicate where the contribution of read 1.
 Column 10-12 (BED12 blocks) indicate positions where the reads match.
-map/	<sample>.CAGEscan.bed	Column 4 (cluster name): Lx_chr_strand_start_end with the chr,strand,start and end of the TSS single-linkage derived clusters
+|map/|sample.CAGEscan.bed|Column 4 (cluster name): Lx_chr_strand_start_end with the chr,strand,start and end of the TSS single-linkage derived clusters
 Column5 (score): number of input paired-end tags of the CAGEscan cluster
 
 
