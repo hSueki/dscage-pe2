@@ -269,13 +269,10 @@ trim_galore main parameters used:
 •	--max_n 0: Discards reads containing more than a specified number of 'N' bases.
 
 Outputs:
-Directory	File	Description
-figs/QC/	<sample>.R1.baseN_distribution.png
-<sample>.R2.baseN_distribution.png
-	distribution of base N (uncertain or ambiguous bases) across the sequences in the input FASTQ files
-tmp/
-<sample>.R1_val_1.fq
-<sample>.R2_val_2.fq	Trimmed and filtered FASTQ files
+|Directory|File|Description|
+|-----|----|----|
+|figs/QC/|sample.R1.baseN_distribution.png sample.R2.baseN_distribution.png|distribution of base N (uncertain or ambiguous bases) across the sequences in the input FASTQ files
+|tmp/|sample.R1_val_1.fq, sample.R2_val_2.fq|Trimmed and filtered FASTQ files|
 
  
 
@@ -296,21 +293,13 @@ Tools:
 
 Outputs:
 
-Directory	File	Description
-summary/	<sample>.R1.top100_rRNA.txt
-<sample>.R2.top100_rRNA.txt	Top100 sequences matched to rRNA.
-summary/
-	<sample>.R1.top100_extracted.txt
-<sample>.R2.top100_extracted.txt	Top100 sequences extracted
-tmp/
-<sample>.R1.matchrRNA.fq
-<sample>.R2.matchrRNA.fq	Pair of FASTQ files containing the filtered out rRNA data
-tmp/
-<sample>.R1.norRNA.fq
-<sample>.R2.norRNA.fq	pair of FASTQ files contains the data without rRNA
-log/	<sample>. R1.matchrRNA.fq.gz
-<sample>. R2.matchrRNA.fq.gz
-	Pair of FASTQ files containing the filtered out rRNA data
+|Directory|File|Description|
+|----|----|----|
+|summary/|sample.R1.top100_rRNA.txt, sample.R2.top100_rRNA.txt|Top100 sequences matched to rRNA.
+|summary/|sample.R1.top100_extracted.txt, sample.R2.top100_extracted.txt|Top100 sequences extracted
+|tmp/|sample.R1.matchrRNA.fq, sample.R2.matchrRNA.fq|Pair of FASTQ files containing the filtered out rRNA data
+|tmp/|sample.R1.norRNA.fq, sample.R2.norRNA.fq|pair of FASTQ files contains the data without rRNA
+|log/|sample.R1.matchrRNA.fq.gz, sample.R2.matchrRNA.fq.gz|Pair of FASTQ files containing the filtered out rRNA data
 
   
 
