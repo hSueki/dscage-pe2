@@ -31,59 +31,85 @@ Table of content
 
 
 ## 2.	Installation
-  1.	Install any of Singularity [ref] or Docker [ref].
-  2.	Download the container image file containing CAGE pipeline.
+1.	Install any of Singularity [ref] or Docker [ref].
+2.	Download the container image file containing CAGE pipeline.
 
-_With Docker :_
+	**With Docker**: 
+	Pull the docker image from ghcr.io 
+	```
+	docker pull ghcr.io/hsueki/dscage-pe2:latest
+	```
 
-	Pull the docker image from ghcr.io
-```
-docker pull ghcr.io/hsueki/dscage-pe2:latest
-```
+	
+	**With Singularity**: 
+	Pull the singularity image file from Sylabs. 
+	```
+	singularity pull --arch amd64 library://hsueki/dscage/dscage_pe2:latest
+	```
+
 
 >[!WARNING] 
 >This docker image cannot be used with singularity.
->When you are using singularity, please use sif file as below.
+>When you are using singularity, please use singularity image file.
 
 
-        
-_With Singularity :_
-
-	Pull the singularity image file from Sylabs.
-```
-singularity pull --arch amd64 library://hsueki/dscage/dscage_pe2:latest
-```
 
 
-  3.	Prepare reference
+3. Prepare fasta and bed files
+   
+	**In case of Human and Mouse data**<br />
+		Download the archived reference and save on your local directory.<br />
+		Extract the reference using tar command.　<br />
+		This archive contains annotation bed files, rDNA.fa and genome.fa.
+		```
+		tar -zxvf hg38.tar.gz
+		```
 
-    [In case of Human and Mouse data]
-      Download the archived reference and save on your local directory.
-      Extract the reference using tar command.　This archive contains annotation bed files, rDNA.fa and genome.fa.
-```
-　$ tar -zxvf hg38.tar.gz
-```
-    [In case of other species]
-      Prepare the fasta file of 
-      * genome.fa
-      * rDNA.fa 
-      * annotation bed files for hierarchical intersect
-          - We prepare annotation bed files using UCSC table browser.
-            (https://genome.ucsc.edu/cgi-bin/hgTables)
+	**In case of other species**
+		Prepare the fasta file of 
+			* genome.fa
+			* rDNA.fa 
+ 			* annotation bed files for hierarchical intersect
+           			We prepare annotation bed files using [UCSC table browser](https://genome.ucsc.edu/cgi-bin/hgTables).<br />
+				Select these datasets and get output knownGene as BED files.
+   
+			- upstream100.bed
+			- 5UTR_exon.bed
+			- coding_exon.bed
+			- 3UTR_exon.bed
+			- downstream100.bed
+			- intron.bed
 
-            Select these datasets and get output knownGene as BED files.
+	Save these bed files to /path/to/reference/hierarchical_intersect/<br/>
+	If you cannot prepare these annotation bed files, you can run CAGE pipeline and get results without annotation of CAGE tags. 
 
-* upstream100.bed
-* 5UTR_exon.bed
-* coding_exon.bed
-* 3UTR_exon.bed
-* downstream100.bed
-* intron.bed
+4. Make STAR index
 
-Save these bed files to /path/to/reference/hierarchical_intersect/
+Save the fasta file of genome as /path/to/reference/genome.fa
+And you have to make STAR index.
 
-If you cannot prepare these annotation bed files, you can run CAGE pipeline and get results without annotation of CAGE tags. 
+Start docker or singularity container with mount reference directory.
+$ docker run -it |
+--mount type=bind,source=/path/to/reference,target=/usr/local/reference |
+hsueki/dscage-pe2
 
+(docker)$ cd /usr/local/reference
+(docker)$ mkdir STAR 
+(docker)$ STAR --runMode genomeGenerate \
+--genomeDir STAR \
+--genomeFastaFiles genome.fa \
+--sjdbGTFfile genome.gtf \
+--limitGenomeGenerateRAM 3400000000
+
+(docker)$ mv genome.fa STAR
+
+ It takes time to make STAR index...
+ Please refer to STAR docs how to prepare STAR index.
+ After the STAR index is generaged, please exit the container. 
+ Then run the container as written  as above, with mount your data and reference directories..
+
+
+   
 
 
 
