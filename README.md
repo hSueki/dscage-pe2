@@ -53,7 +53,7 @@ Table of content
 >When you are using singularity, please use singularity image file.
 
 
-
+<br/>
 
 3. Prepare fasta and bed files
    
@@ -61,15 +61,15 @@ Table of content
 		Download the archived reference and save on your local directory.<br />
 		Extract the reference using tar command.　<br />
 		This archive contains annotation bed files, rDNA.fa and genome.fa.
-		```
-		tar -zxvf hg38.tar.gz
-		```
+	```
+	tar -zxvf hg38.tar.gz
+	```
 
 	**In case of other species**
 		Prepare the fasta file of 
 			* genome.fa
 			* rDNA.fa 
- 			* annotation bed files for hierarchical intersect
+ 			* annotation bed files for hierarchical intersect<br/>
            			We prepare annotation bed files using [UCSC table browser](https://genome.ucsc.edu/cgi-bin/hgTables).<br />
 				Select these datasets and get output knownGene as BED files.
    
@@ -83,28 +83,34 @@ Table of content
 	Save these bed files to /path/to/reference/hierarchical_intersect/<br/>
 	If you cannot prepare these annotation bed files, you can run CAGE pipeline and get results without annotation of CAGE tags. 
 
+
 4. Make STAR index
 
-Save the fasta file of genome as /path/to/reference/genome.fa
-And you have to make STAR index.
+	Save the fasta file of genome as /path/to/reference/STAR/genome.fa <br/>
+	And you have to make STAR index.
 
-Start docker or singularity container with mount reference directory.
-$ docker run -it |
---mount type=bind,source=/path/to/reference,target=/usr/local/reference |
-hsueki/dscage-pe2
+	Start docker or singularity container with mount reference directory.
 
-(docker)$ cd /usr/local/reference
-(docker)$ mkdir STAR 
-(docker)$ STAR --runMode genomeGenerate \
---genomeDir STAR \
---genomeFastaFiles genome.fa \
---sjdbGTFfile genome.gtf \
---limitGenomeGenerateRAM 3400000000
+	```
+	docker run -it --mount type=bind,source=/path/to/reference,target=/usr/local/reference hsueki/dscage-pe2
+	```
+	OR
+	```
+	singularity shell --writable --bind /path/to/reference:/usr/local/reference dscage-pe2.sif
+	```
 
-(docker)$ mv genome.fa STAR
+	In the container,
+	```
+	cd /usr/local/reference
+	STAR --runMode genomeGenerate \
+     	     --genomeDir STAR \
+     	     --genomeFastaFiles STAR/genome.fa \
+     	     --sjdbGTFfile genome.gtf \
+     	     --limitGenomeGenerateRAM 3400000000
+	```
 
- It takes time to make STAR index...
- Please refer to STAR docs how to prepare STAR index.
+ It takes time to make STAR index...<br/>
+ Please refer to STAR docs how to prepare STAR index.<br/>
  After the STAR index is generaged, please exit the container. 
  Then run the container as written  as above, with mount your data and reference directories..
 
