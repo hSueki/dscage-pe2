@@ -163,10 +163,10 @@ hsueki/dscage-pe2
 
 (docker)$ mv genome.fa STAR
 
-# It takes time to make STAR index...
-# Please refer to STAR docs how to prepare STAR index.
-# After the STAR index is generaged, please exit the container. 
-# Then run the container as written  as above, with mount your data and reference directories..
+ It takes time to make STAR index...
+ Please refer to STAR docs how to prepare STAR index.
+ After the STAR index is generaged, please exit the container. 
+ Then run the container as written  as above, with mount your data and reference directories..
 
 
 2.	rDNA.fa
@@ -214,7 +214,7 @@ The directory and file name under the reference directory should be the same for
    |
 
 
-5.	Main steps
+## 5.	Main steps
 
 The pipeline is structured to perform the following steps in sequence:
 
@@ -226,7 +226,7 @@ The pipeline is structured to perform the following steps in sequence:
 6. BAM to CTSS with G correction
 7. Hierarchical Intersection and Clustering
 
-1. Raw base distribution and quality score distribution calculation
+### 1. Raw base distribution and quality score distribution calculation
 
 This step generates QC plots to examine the raw base distribution and raw quality score distribution for read 1 (R1) and read 2 (R2).
 
@@ -247,7 +247,7 @@ figs/QC/
  <sample>.R2.raw_QV_distribution.png　
       
 
-2. Sequence trimming
+### 2. Sequence trimming
 
 This process consists in trimming of low-quality base calls from the end of the reads (Phred score > 30), adapter removal (based on a comprehensive list of standard adapters), filtering of reads contains any “Ns” and short sequence filtering (< 15 bp).
 
@@ -276,7 +276,7 @@ Outputs:
 
  
 
-3. rRNA sequences removal
+### 3. rRNA sequences removal
 
 This portion of the script is responsible for removing sequences that match ribosomal RNA (rRNA) sequences.
 
@@ -381,13 +381,9 @@ Parameters:
 •	-q 10: Only reads with a mapping quality of 10 or higher will be considered for CTSS generation.
 
 Outputs:
-Directory	File	Description
-map/	<sample>.R1.ctss.bed	1 G-corrected CTSS BED file. The output is formatted as BED (for CTSS), where names represent internal scores and the score represent the corrected counts.
-The columns are as follow: 
-Chromosome
-Start position
-End position
-name: contains multiple sub-fields separated by commas. Each sub-field provides specific information:
+|Directory|File|Description|
+|----|----|----|
+|map/|sample.R1.ctss.bed| 1G-corrected CTSS BED file. The output is formatted as BED (for CTSS), where names represent internal scores and the score represent the corrected counts. The columns are as follow: Chromosome Start position End position name: contains multiple sub-fields separated by commas. Each sub-field provides specific information:
 •	X: Observed read counts corresponding to the CTSS.
 •	A0: Counts of reads that are observed in this CTSS, with an extra G mismatching to the genome.
 •	Nuc: The nucleotide observed at the CTSS position.
@@ -397,14 +393,14 @@ name: contains multiple sub-fields separated by commas. Each sub-field provides 
 •	U: Counts of reads that are observed in this CTSS, without an extra G.
 •	F: The counts of reads that are observed in this CTSS but expected to belong to the next (1bp downstream) CTSS.
 Corrected Counts: Represents the corrected read counts corresponding to the CTSS after applying corrections.
-Strand
-summary/	mapping.txt	mapping summary for all samples which includes the following counts of reads: raw, trimmed_adapters_Nsequences,paired, mapq10, multimap, unmapped, and rRNA.
-tmp/	<sample>.mapsummary.txt	Making a Mapping summary file which includes the following counts of reads: raw, trimmed_adapters_Nsequences,paired, mapq10, multimap, unmapped, and rRNA.
-summary/	STARsummary_perc.txt	mapping summary for all samples which includes the Statistics from STAR, including input: total number of input reads processed by the aligner; mapq10: % of reads that were mapped with a mapping quality (MAPQ) score of 10 or higher; multi: % of reads that mapped to multiple genomic locations; too_many: % of reads that mapped to too many genomic locations, possibly indicating a problem with mapping specificity; unmap_mismatch: % of reads that were unmapped due to mismatches with the reference genome; unmap_short: % of reads that were too short to be mapped.; unmap_other: % of unmapped reads due to reasons other.
+Strand|
+|summary/|mapping.txt|mapping summary for all samples which includes the following counts of reads: raw, trimmed_adapters_Nsequences,paired, mapq10, multimap, unmapped, and rRNA.|
+|tmp/|sample.mapsummary.txt|Making a Mapping summary file which includes the following counts of reads: raw, trimmed_adapters_Nsequences,paired, mapq10, multimap, unmapped, and rRNA.|
+|summary/|STARsummary_perc.txt|mapping summary for all samples which includes the Statistics from STAR, including input: total number of input reads processed by the aligner; mapq10: % of reads that were mapped with a mapping quality (MAPQ) score of 10 or higher; multi: % of reads that mapped to multiple genomic locations; too_many: % of reads that mapped to too many genomic locations, possibly indicating a problem with mapping specificity; unmap_mismatch: % of reads that were unmapped due to mismatches with the reference genome; unmap_short: % of reads that were too short to be mapped.; unmap_other: % of unmapped reads due to reasons other.|
 
-tmp/	<sample>.STARsummary_perc.txt	Statistics from STAR, including input: total number of input reads processed by the aligner; mapq10: % of reads that were mapped with a mapping quality (MAPQ) score of 10 or higher; multi: % of reads that mapped to multiple genomic locations; too_many: % of reads that mapped to too many genomic locations, possibly indicating a problem with mapping specificity; unmap_mismatch: % of reads that were unmapped due to mismatches with the reference genome; unmap_short: % of reads that were too short to be mapped.; unmap_other: % of unmapped reads due to reasons other.
-figs/	STARmap_percent.pdf	Bar plot with stacked bars, where each bar represents the percentage distribution of different STAR-specific mapping statistics for different samples.
-tmp/	<sample>.mapsummary.txt	Statistics from STAR, including: the total number of raw sequencing reads; the number of sequences that were trimmed due to the presence of adapters; the number of reads that remained paired after preprocessing and filtering steps; the number of reads that were mapped with a mapping quality (MAPQ) score of 10 or higher; the number of reads that mapped to multiple genomic locations; the number of reads that were not successfully mapped to the reference genome; the number of reads that were identified as ribosomal RNA (rRNA) sequences. 
+|tmp/|sample.STARsummary_perc.txt|Statistics from STAR, including input: total number of input reads processed by the aligner; mapq10: % of reads that were mapped with a mapping quality (MAPQ) score of 10 or higher; multi: % of reads that mapped to multiple genomic locations; too_many: % of reads that mapped to too many genomic locations, possibly indicating a problem with mapping specificity; unmap_mismatch: % of reads that were unmapped due to mismatches with the reference genome; unmap_short: % of reads that were too short to be mapped.; unmap_other: % of unmapped reads due to reasons other.|
+|figs/|STARmap_percent.pdf|Bar plot with stacked bars, where each bar represents the percentage distribution of different STAR-specific mapping statistics for different samples.|
+|tmp/|sample.mapsummary.txt|Statistics from STAR, including: the total number of raw sequencing reads; the number of sequences that were trimmed due to the presence of adapters; the number of reads that remained paired after preprocessing and filtering steps; the number of reads that were mapped with a mapping quality (MAPQ) score of 10 or higher; the number of reads that mapped to multiple genomic locations; the number of reads that were not successfully mapped to the reference genome; the number of reads that were identified as ribosomal RNA (rRNA) sequences.| 
 
 		
 
@@ -472,42 +468,56 @@ Parameters:
 •	l = 200 (default) maximum cluster length
 
 Outputs:
-Directory	File	Description
-map/	peak.bed	8-column file containing information about the peaks detected by the Paraclu algorithm. The columns are: Chromosome, start position, end position, peak name, the sum of the data values in the cluster, strand, the number of positions with data in the cluster, the cluster's "minimum density", and the cluster's "maximum density".
-map/	<sample>.count.bed	7-column file containing the peak details (column 1-6) and the count number for this sample (column 7).
-map/	<sample>.txt	Peak name and count number for this sample. The first line contains the total counts
-summary/	totals.txt	Number of raw counts of CTSSs, annotated ones and number of peaks per sample.
-figs/	ctss_counts.pdf	Bar plot where each bar represents the counts of clustered and raw CTSS for different samples.
-figs/	mapping_counts.pdf	Bar plot with stacked bars, where each bar represents the counts of different mapping statistics such as the counts of rRNA, unmatched pairs, removed post-trimming reads, unmapped reads, multimapped reads, and reads with MAPQ10 scores, in millions across different samples.
-figs/	mapping_percent.pdf	Bar plot with stacked bars, where each bar represents the percentage distribution of different mapping statistics for different samples.
+
+|Directory|File|Description|
+|----|----|----|
+|map/|peak.bed|8-column file containing information about the peaks detected by the Paraclu algorithm. The columns are: Chromosome, start position, end position, peak name, the sum of the data values in the cluster, strand, the number of positions with data in the cluster, the cluster's "minimum density", and the cluster's "maximum density".|
+|map/|sample.count.bed|7-column file containing the peak details (column 1-6) and the count number for this sample (column 7).|
+|map/|sample.txt|Peak name and count number for this sample. The first line contains the total counts|
+|summary/|totals.txt|Number of raw counts of CTSSs, annotated ones and number of peaks per sample.|
+|figs/|ctss_counts.pdf|Bar plot where each bar represents the counts of clustered and raw CTSS for different samples.|
+|figs/|mapping_counts.pdf|Bar plot with stacked bars, where each bar represents the counts of different mapping statistics such as the counts of rRNA, unmatched pairs, removed post-trimming reads, unmapped reads, multimapped reads, and reads with MAPQ10 scores, in millions across different samples.|
+|figs/|mapping_percent.pdf|Bar plot with stacked bars, where each bar represents the percentage distribution of different mapping statistics for different samples.|
 
 
 
 
 
 
-6.	Brief descriptions of all output file: 
-log/
-sample.Log.final.out		Log file of STAR
-sample.Log.out			Log file of STAR
-sample.Log.progress.out          Log file of STAR
-sample.R1.matchrRNA.fq.gz	removed rRNA sequence by rRNAdust (R1)
-sample.R2.matchrRNA.fq.gz	removed rRNA sequence by rRNAdust (R2)
-sample.SJ.out.tab		        Log file of STAR
+## 6.	Brief descriptions of all output file:
+   
+|log/| |
+|----|----|
+|sample.Log.final.out|Log file of STAR|
+|sample.Log.out|Log file of STAR|
+|sample.Log.progress.out|Log file of STAR|
+|sample.R1.matchrRNA.fq.gz|removed rRNA sequence by rRNAdust (R1)|
+|sample.R2.matchrRNA.fq.gz|removed rRNA sequence by rRNAdust (R2)|
+|sample.SJ.out.tab|Log file of STAR|
 
-map/
-peak.bed			        peak file from single-nucleotide CTSS using paraclu (from all ctss files)
-sample.bed			BED12 read file converted from sample.mapq10.bam (R1+R2 reads)
-sample.mapq10.bam		After STAR mapping, sorted and filtered BAM file
-sample.R1.count.bed		counts for each peak
-sample.R1.count.txt		Output total counts
-sample.R1.ctss.bed		R1 G-corrected ctss file (starBam2GcorrectedCtss_nbg.sh)
-sample.R1.mapq10.bam	Select R1 reads from sample.mapq10.bam
-sample.R1.mapq10.bam.bai	Indexed R1 reads
-sample.R2.mapq10.bam	Select R2 reads from sample.mapq10.bam
-sample.Unmapped.out.mate1	Unmapped reads, R1
-sample.Unmapped.out.mate2	Unmapped reads, R2
+|map/|  |
+|----|----|
+|peak.bed|peak file from single-nucleotide CTSS using paraclu (from all ctss files)
+|sample.bed|BED12 read file converted from sample.mapq10.bam (R1+R2 reads)
+|sample.mapq10.bam|After STAR mapping, sorted and filtered BAM file
+|sample.R1.count.bed|counts for each peak
+|sample.R1.count.txt|Output total counts
+|sample.R1.ctss.bed|R1 G-corrected ctss file (starBam2GcorrectedCtss_nbg.sh)
+|sample.R1.mapq10.bam|Select R1 reads from sample.mapq10.bam
+|sample.R1.mapq10.bam.bai|Indexed R1 reads
+|sample.R2.mapq10.bam|Select R2 reads from sample.mapq10.bam
+|sample.Unmapped.out.mate1|Unmapped reads, R1
+|sample.Unmapped.out.mate2|Unmapped reads, R2
 
-summary/mapping.txt			Summary of mapping reads taken from STAR's Log filepromoter_counts.txt		Summary of hierarchical intersectsample.R1.top100_extracted.txt	containing top100 sequences passing rRNA removalsample.R1.top100_mapped.txt		containing top100 sequences from mapped(mapq10)sample.R1.top100_rRNA.txt		containing top100 sequences rRNAsample.R1.top100_unmapped.txt	containing top100 sequences from unmappedSTARsummary_perc.txt			STAR% map file ( from STAR log files )total.txt				summary file for ctss-intersect-peak graph
+|summary/|  |
+|----|----|
+|mapping.txt|Summary of mapping reads taken from STAR's Log file|
+|promoter_counts.txt|Summary of hierarchical intersect|
+|sample.R1.top100_extracted.txt|containing top100 sequences passing rRNA removal|
+|sample.R1.top100_mapped.txt|containing top100 sequences from mapped(mapq10)|
+|sample.R1.top100_rRNA.txt|containing top100 sequences rRNA|
+|sample.R1.top100_unmapped.txt|containing top100 sequences from unmapped|
+|STARsummary_perc.txt|STAR% map file ( from STAR log files )|
+|total.txt|summary file for ctss-intersect-peak graph
 
 
