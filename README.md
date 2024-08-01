@@ -36,9 +36,9 @@ Table of content
 
 _With Docker :_
 
-		Pull the docker image from ghcr.io
+	Pull the docker image from ghcr.io
 ```
-$ docker pull ghcr.io/hsueki/dscage-pe2:latest
+docker pull ghcr.io/hsueki/dscage-pe2:latest
 ```
 
 >[!WARNING] 
@@ -49,20 +49,44 @@ $ docker pull ghcr.io/hsueki/dscage-pe2:latest
         
 _With Singularity :_
 
-			Download the singularity image file from Github and save on your local directory.
-  		Download file: dscage-pe2.sif
+	Pull the singularity image file from Sylabs.
+```
+singularity pull --arch amd64 library://hsueki/dscage/dscage_pe2:latest
+```
 
 
   3.	Prepare reference
 
     [In case of Human and Mouse data]
-      Download the archived reference from Github and save on your local directory.
-      Extract the reference using tar command.
+      Download the archived reference and save on your local directory.
+      Extract the reference using tar command.　This archive contains annotation bed files, rDNA.fa and genome.fa.
 ```
 　$ tar -zxvf hg38.tar.gz
 ```
     [In case of other species]
-      Prepare the fasta file of genome and rDNA.
+      Prepare the fasta file of 
+      * genome.fa
+      * rDNA.fa 
+      * annotation bed files for hierarchical intersect
+          - We prepare annotation bed files using UCSC table browser.
+            (https://genome.ucsc.edu/cgi-bin/hgTables)
+
+            Select these datasets and get output knownGene as BED files.
+
+* upstream100.bed
+* 5UTR_exon.bed
+* coding_exon.bed
+* 3UTR_exon.bed
+* downstream100.bed
+* intron.bed
+
+Save these bed files to /path/to/reference/hierarchical_intersect/
+
+If you cannot prepare these annotation bed files, you can run CAGE pipeline and get results without annotation of CAGE tags. 
+
+
+
+
 
 ## 3.	Input
      The input files required are paired FASTQ files. The accepted naming convention for the FASTQ files is <sample>.R1.fq.gz and <sample>.R2.fq.gz.
@@ -194,24 +218,24 @@ If you cannot prepare these annotation bed files, you can run CAGE pipeline and 
 <reference directory>
 The directory and file name under the reference directory should be the same for all species.
 
- ----- hg38/
-   |    |-- reference/
-   |          |-- STAR/STAR_INDEX_FILES, genome.fa
-   |          |-- ribosomalRNA/rDNA.fa
-   |          |-- hierarchical_intersect/BED_FILES
-   |
-   |-- mm10/
-   |    |-- reference/
-   |          |-- STAR/STAR_INDEX_FILES, genome.fa
-   |          |-- ribosomalRNA/rDNA.fa
-   |          |-- hierarchical_intersect/BED_FILES
-   |
-   |-- other_species/
-   |    |-- reference/
-   |          |-- STAR/STAR_INDEX_FILES, genome.fa
-   |          |-- ribosomalRNA/rDNA.fa
-   |          |-- hierarchical_intersect/BED_FILES
-   |
+ ----- hg38/<br />
+   |    |-- reference/<br />
+   |          |-- STAR/STAR_INDEX_FILES, genome.fa<br />
+   |          |-- ribosomalRNA/rDNA.fa<br />
+   |          |-- hierarchical_intersect/BED_FILES<br />
+   |<br />
+   |-- mm10/<br />
+   |    |-- reference/<br />
+   |          |-- STAR/STAR_INDEX_FILES, genome.fa<br />
+   |          |-- ribosomalRNA/rDNA.fa<br />
+   |          |-- hierarchical_intersect/BED_FILES<br />
+   |<br />
+   |-- other_species/<br />
+   |    |-- reference/<br />
+   |          |-- STAR/STAR_INDEX_FILES, genome.fa<br />
+   |          |-- ribosomalRNA/rDNA.fa<br />
+   |          |-- hierarchical_intersect/BED_FILES<br />
+   |<br />
 
 
 ## 5.	Main steps
@@ -271,8 +295,8 @@ trim_galore main parameters used:
 Outputs:
 |Directory|File|Description|
 |-----|----|----|
-|figs/QC/|sample.R1.baseN_distribution.png sample.R2.baseN_distribution.png|distribution of base N (uncertain or ambiguous bases) across the sequences in the input FASTQ files
-|tmp/|sample.R1_val_1.fq, sample.R2_val_2.fq|Trimmed and filtered FASTQ files|
+|figs/QC/|sample.R1.baseN_distribution.png<br />sample.R2.baseN_distribution.png|distribution of base N (uncertain or ambiguous bases) across the sequences in the input FASTQ files
+|tmp/|sample.R1_val_1.fq<br />sample.R2_val_2.fq|Trimmed and filtered FASTQ files|
 
  
 
@@ -293,13 +317,13 @@ Tools:
 
 Outputs:
 
-|Directory|File|Description|
-|----|----|----|
-|summary/|sample.R1.top100_rRNA.txt, sample.R2.top100_rRNA.txt|Top100 sequences matched to rRNA.
-|summary/|sample.R1.top100_extracted.txt, sample.R2.top100_extracted.txt|Top100 sequences extracted
-|tmp/|sample.R1.matchrRNA.fq, sample.R2.matchrRNA.fq|Pair of FASTQ files containing the filtered out rRNA data
-|tmp/|sample.R1.norRNA.fq, sample.R2.norRNA.fq|pair of FASTQ files contains the data without rRNA
-|log/|sample.R1.matchrRNA.fq.gz, sample.R2.matchrRNA.fq.gz|Pair of FASTQ files containing the filtered out rRNA data
+|Directory|File                                                          |Description                                              |
+|----     |----                                                          |----                                                     |
+|summary/ |sample.R1.top100_rRNA.txt<br />sample.R2.top100_rRNA.txt          |Top100 sequences matched to rRNA.                        |
+|summary/ |sample.R1.top100_extracted.txt<br />sample.R2.top100_extracted.txt|Top100 sequences extracted                               |
+|tmp/     |sample.R1.matchrRNA.fq<br />sample.R2.matchrRNA.fq                |Pair of FASTQ files containing the filtered out rRNA data|
+|tmp/     |sample.R1.norRNA.fq<br />sample.R2.norRNA.fq                      |pair of FASTQ files contains the data without rRNA       |
+|log/     |sample.R1.matchrRNA.fq.gz<br />sample.R2.matchrRNA.fq.gz          |Pair of FASTQ files containing the filtered out rRNA data|
 
   
 
@@ -319,7 +343,7 @@ Tool:
 
 Output:
 |Directory|File|Description|
-|/tmp|sample.R1.paired.fq, sample.R2.paired.fq|Matched paired FASTQ files|
+|/tmp|sample.R1.paired.fq<br />sample.R2.paired.fq|Matched paired FASTQ files|
 
 
 5. Mapping with STAR
@@ -349,17 +373,17 @@ Samtools
 •	-f 0x2, -F 0x104, -f 0x40, -f 0x80: Filters reads based on flags to select properly mapped reads and exclude non-primary alignments and unmapped reads.
 
 Outputs:
-|Directory|File|Description|
-|----|----|----|
-|/map|sample.bam|Aligned BAM file
-|/map|sample.mapq10.bam|Aligned BAM file filtered with Samtools
-|/map|sample.R1.mapq10.bam, sample.R1.mapq10.bam.bai, sample.R2.mapq10.bam|Sorted and indexed BAM files for R1 and R2 reads
-|/map|sample.Unmapped.out.mate1, sample.Unmapped.out.mate2|Unmapped reads in Fastx format
-|summary/|sample.R1.top100_unmapped.txt, sample.R2.top100_unmapped.txt, sample.R1.top100_mapped.txt, sample.R2.top100_mapped.txt|Top 100 sequences from mapped and unmapped files
-|/log|sample.Log.final.out|Statistics from STAR: Number of input reads, % Uniquely mapped reads, of reads mapped to multiple loci, % of reads mapped to too many loci, % of reads unmapped: too many mismatches, % of reads unmapped: too short, % of reads unmapped: other
-|/log|sample.Log.out|Description of the execution of the STAR, including command line parameters, initial and final user parameters, effective command line, genome generation parameters and genome information.
-|/log|sample.Log.progress.out|time-stamped record of progress during a process
-|/log|sample.SJ.out.tab|List of the splice junctions detected during the alignment process. The columns are as follow:   Chromosome: Chromosomal location of the splice junction; Start: Starting position of the splice junction; End: Ending position of the splice junction; Strand: Orientation of the splice junction; Intron Motif: Represents the splice junction's motif, with "0" indicating unknown motif; Support: Number of reads supporting the splice junction; Annotated: Indicates whether the splice junction is annotated or novel.; Unique: Indicates whether the splice junction is unique or shared; Overhang: Length of the overhang.
+|Directory|File                                                                                                                   |Description|
+|----     |----                                                                                                                   |----                                            |
+|/map     |sample.bam                                                                                                             |Aligned BAM file
+|/map     |sample.mapq10.bam                                                                                                      |Aligned BAM file filtered with Samtools
+|/map     |sample.R1.mapq10.bam<br />sample.R1.mapq10.bam.bai<br />sample.R2.mapq10.bam                                           |Sorted and indexed BAM files for R1 and R2 reads
+|/map     |sample.Unmapped.out.mate1<br />sample.Unmapped.out.mate2                                                                   |Unmapped reads in Fastx format
+|/summary |sample.R1.top100_unmapped.txt<br />sample.R2.top100_unmapped.txt<br />sample.R1.top100_mapped.txt<br />sample.R2.top100_mapped.txt    |Top 100 sequences from mapped and unmapped files
+|/log     |sample.Log.final.out|Statistics from STAR: Number of input reads, % Uniquely mapped reads, of reads mapped to multiple loci, % of reads mapped to too many loci, % of reads unmapped: too many mismatches, % of reads unmapped: too short, % of reads unmapped: other
+|/log    |sample.Log.out|Description of the execution of the STAR, including command line parameters, initial and final user parameters, effective command line, genome generation parameters and genome information.
+|/log    |sample.Log.progress.out|time-stamped record of progress during a process
+|/log    |sample.SJ.out.tab|List of the splice junctions detected during the alignment process. <br />The columns are as follow:   <br />Chromosome: Chromosomal location of the splice junction; <br />Start: Starting position of the splice junction; <br />End: Ending position of the splice junction; <br />Strand: Orientation of the splice junction; <br />Intron Motif: Represents the splice junction's motif, with "0" indicating unknown motif; <br />Support: Number of reads supporting the splice junction; <br />Annotated: Indicates whether the splice junction is annotated or novel.; <br />Unique: Indicates whether the splice junction is unique or shared; <br />Overhang: Length of the overhang.
 
 Of note, since in STAR, paired-end reads are treated as a single read,  the paired-end reads are counted as a single read in the uniquely mapped reads number. The uniquely mapped reads number also includes reads in which only one of the paired-end reads is uniquely mapped.  The file containing the top 100 sequences from mapped and unmapped files was generated.
 
@@ -383,17 +407,7 @@ Parameters:
 Outputs:
 |Directory|File|Description|
 |----|----|----|
-|map/|sample.R1.ctss.bed| 1G-corrected CTSS BED file. The output is formatted as BED (for CTSS), where names represent internal scores and the score represent the corrected counts. The columns are as follow: Chromosome Start position End position name: contains multiple sub-fields separated by commas. Each sub-field provides specific information:
-•	X: Observed read counts corresponding to the CTSS.
-•	A0: Counts of reads that are observed in this CTSS, with an extra G mismatching to the genome.
-•	Nuc: The nucleotide observed at the CTSS position.
-•	State: Indicates the state of the CTSS (Start, Generic, End, or Other).
-•	A: Counts of reads that are observed in this CTSS, with an extra G.
-•	N: Corrected read counts corresponding to the CTSS.
-•	U: Counts of reads that are observed in this CTSS, without an extra G.
-•	F: The counts of reads that are observed in this CTSS but expected to belong to the next (1bp downstream) CTSS.
-Corrected Counts: Represents the corrected read counts corresponding to the CTSS after applying corrections.
-Strand|
+|map/|sample.R1.ctss.bed| 1G-corrected CTSS BED file. The output is formatted as BED (for CTSS), where names represent internal scores and the score represent the corrected counts. The columns are as follow: <br />col1: Chromosome <br /> col2: Start position <br />col3: End position <br />col4: name: contains multiple sub-fields separated by commas. Each sub-field provides specific information:<br />- **X**: Observed read counts corresponding to the CTSS.<br />- **A0**: Counts of reads that are observed in this CTSS, with an extra G mismatching to the genome.<br />- **Nuc**: The nucleotide observed at the CTSS position.<br />- **State**: Indicates the state of the CTSS (Start, Generic, End, or Other).<br />- **A**: Counts of reads that are observed in this CTSS, with an extra G.<br />- **N**: Corrected read counts corresponding to the CTSS.<br />- **U**: Counts of reads that are observed in this CTSS, without an extra G.<br />- **F**: The counts of reads that are observed in this CTSS but expected to belong to the next (1bp downstream) CTSS.<br />col5: Corrected Counts: Represents the corrected read counts corresponding to the CTSS after applying corrections.<br />col6: Strand|
 |summary/|mapping.txt|mapping summary for all samples which includes the following counts of reads: raw, trimmed_adapters_Nsequences,paired, mapq10, multimap, unmapped, and rRNA.|
 |tmp/|sample.mapsummary.txt|Making a Mapping summary file which includes the following counts of reads: raw, trimmed_adapters_Nsequences,paired, mapq10, multimap, unmapped, and rRNA.|
 |summary/|STARsummary_perc.txt|mapping summary for all samples which includes the Statistics from STAR, including input: total number of input reads processed by the aligner; mapq10: % of reads that were mapped with a mapping quality (MAPQ) score of 10 or higher; multi: % of reads that mapped to multiple genomic locations; too_many: % of reads that mapped to too many genomic locations, possibly indicating a problem with mapping specificity; unmap_mismatch: % of reads that were unmapped due to mismatches with the reference genome; unmap_short: % of reads that were too short to be mapped.; unmap_other: % of unmapped reads due to reasons other.|
@@ -422,7 +436,7 @@ Outputs:
 |Directory|File|Description|
 |----|----|----|
 |tmp/|sample.R1.ctss.bed|CTSS file containing TSSs with Corrected Counts > 0.
-|tmp/intersect|sample.R1.ctss.3UTR_exon.bed, sample.R1.ctss.5UTR_exon.bed, sample.R1.ctss.coding_exon.bed, sample.R1.ctss.downstream100.bed, sample.R1.ctss.intergenic.bed, sample.R1.ctss.intron.bed, sample.R1.ctss.upstream100.bed|Each BED file contains the TSSs that overlap with regions stored as BED files in /usr/local/reference/hierarchical_intersect. All remaining TSSs not found in any of these annotation BED files, will be stored in sample.R1.ctss.intergenic.bed
+|tmp/intersect|sample.R1.ctss.3UTR_exon.bed<br />sample.R1.ctss.5UTR_exon.bed<br />sample.R1.ctss.coding_exon.bed<br />sample.R1.ctss.downstream100.bed<br />sample.R1.ctss.intergenic.bed<br /> sample.R1.ctss.intron.bed<br /> sample.R1.ctss.upstream100.bed|Each BED file contains the TSSs that overlap with regions stored as BED files in /usr/local/reference/hierarchical_intersect. All remaining TSSs not found in any of these annotation BED files, will be stored in sample.R1.ctss.intergenic.bed
 |summary/|promoter_counts.txt|Sum of the read counts for each region: upstream100, 5UTR_exon, coding_exon, 3UTR_exon, intron, downstream100, intergenic and total for each sample of the dataset.
 |figs/|promoter_counts.pdf|Bar plot with stacked bars, where each bar represents the count of promoters for different types of regions (e.g.,Intergenic, Downstream 100bp, Intron, etc.) across all samples.
 |figs/|promoter_percent.pdf|Bar plot with stacked bars, where each bar represents the percentage distribution of promoters for different types of regions.
@@ -445,11 +459,11 @@ o	-u : (unique) Reporting the mere presence of any overlapping features
 o	-s: Enforcing same strandedness
 
 Outputs:
-|Directory|File|Description
+|Directory|File|Description|
+|----|----|----|
 |map/|sample.bed|BED12 file where the start position is the 5’' end of Read 1 and the end position is the 3' end of read 2. Columns 7-8 (thick coordinates) indicate where the contribution of read 1.
 Column 10-12 (BED12 blocks) indicate positions where the reads match.
-|map/|sample.CAGEscan.bed|Column 4 (cluster name): Lx_chr_strand_start_end with the chr,strand,start and end of the TSS single-linkage derived clusters
-Column5 (score): number of input paired-end tags of the CAGEscan cluster
+|map/|sample.CAGEscan.bed|Column 4 (cluster name): Lx_chr_strand_start_end with the chr,strand,start and end of the TSS single-linkage derived clusters, Column5 (score): number of input paired-end tags of the CAGEscan cluster
 
 
 9. Generating peak file from single-nucleotide CTSS
@@ -473,7 +487,7 @@ Outputs:
 |----|----|----|
 |map/|peak.bed|8-column file containing information about the peaks detected by the Paraclu algorithm. The columns are: Chromosome, start position, end position, peak name, the sum of the data values in the cluster, strand, the number of positions with data in the cluster, the cluster's "minimum density", and the cluster's "maximum density".|
 |map/|sample.count.bed|7-column file containing the peak details (column 1-6) and the count number for this sample (column 7).|
-|map/|sample.txt|Peak name and count number for this sample. The first line contains the total counts|
+|map/|sample.txt|Peak name and count number for this sample. The first line contains the total counts.|
 |summary/|totals.txt|Number of raw counts of CTSSs, annotated ones and number of peaks per sample.|
 |figs/|ctss_counts.pdf|Bar plot where each bar represents the counts of clustered and raw CTSS for different samples.|
 |figs/|mapping_counts.pdf|Bar plot with stacked bars, where each bar represents the counts of different mapping statistics such as the counts of rRNA, unmatched pairs, removed post-trimming reads, unmapped reads, multimapped reads, and reads with MAPQ10 scores, in millions across different samples.|
