@@ -11,15 +11,17 @@ Table of content
 3.	Input
 4.	[Usage]
 5.	Main steps
-  1. Raw base distribution and quality score distribution calculation
-  2. Sequence trimming
-  3. rRNA sequences removal
-  4. Paired-end reads matching
-  5. Mapping with STAR
-  6. BAM to CTSS with G correction
-  7. Hierarchical Intersection
-  8. Analysis of Paired BAM files
-  9. Generating peak file from single-nucleotide CTSS
+    1. Raw base distribution and quality score distribution calculation
+    2. Sequence trimming
+    3. rRNA sequences removal
+    4. Paired-end reads matching
+    5. Mapping with STAR
+    6. BAM to CTSS with G correction
+    7. Hierarchical Intersection
+    8. Analysis of Paired BAM files
+    9. Generating peak file from single-nucleotide CTSS
+  
+6.	Brief descriptions of all output file
 
 ## 1.	Introduction
 
@@ -64,13 +66,14 @@ Table of content
 	```
 	tar -zxvf hg38.tar.gz
 	```
-	Prepare the fasta file of human/mouse genome and save it to extracted reference directory as reference/STAR/genome.fa . <br/><br/>
+	Prepare the fasta file of [human](https://www.encodeproject.org/files/GRCh38_no_alt_analysis_set_GCA_000001405.15/)/[mouse genome](https://www.encodeproject.org/files/mm10_no_alt_analysis_set_ENCODE/) and save it to extracted reference directory as reference/STAR/genome.fa . <br/><br/>
+ 	
 
 	**In case of other species**<br/>
 		Prepare the fasta files and bed files:
 
-	+ genome.fa
-	+ rDNA.fa 
+	+ genome.fa:	Save geneme.fa to /path/to/reference/STAR
+	+ rDNA.fa:	Save rDNA.fa to /path/to/reference/ribosomalRNA
 	+ annotation bed files for hierarchical intersect <br/>
 		We prepare annotation bed files using [UCSC table browser](https://genome.ucsc.edu/cgi-bin/hgTables).<br />
 		Select these datasets and get output knownGene as BED files.
@@ -84,7 +87,7 @@ Table of content
 
 	Save these bed files to /path/to/reference/hierarchical_intersect/<br/>
 	If you cannot prepare these annotation bed files, you can run CAGE pipeline and get results without annotation of CAGE tags. 
-
+<br/>
 
 4. Make STAR index
 
@@ -114,28 +117,24 @@ Table of content
  It takes time to make STAR index...<br/>
  Please refer to STAR docs how to prepare STAR index.<br/>
  After the STAR index is generaged, please exit the container. 
- Then run the container as written  as above, with mount your data and reference directories..
-
 
    
 
 
-
-
 ## 3.	Input
-     The input files required are paired FASTQ files. The accepted naming convention for the FASTQ files is <sample>.R1.fq.gz and <sample>.R2.fq.gz.
+     The input files required are paired FASTQ files. The accepted naming convention for the FASTQ files is _sample_.R1.fq.gz and _sample_.R2.fq.gz.
      The the input files must be copied within a single input directory: </path/input_fastq_dir/>
 
 ## 4.	Usage
 
     How to Set up and start Docker or Singularity
 
-  With Docker 
-  1.	Run a Docker container using the loaded image (hsueki/dscage-pe2). Mount the reference  and your local data directory to the container.
+**With Docker** 
+1.	Run a Docker container using the loaded image (hsueki/dscage-pe2). Mount the reference  and your local data directory to the container.
 ```
   $ docker run -it |
     --mount type=bind,source=/path/to/reference,target=/usr/local/reference |
-    --mount type=bind,source=/path/to/your/data,target=/root/data |  
+    --mount type=bind,source=/path/input_fastq_dir,target=/root/data |  
     hsueki/dscage-pe2
 ```
 
@@ -157,96 +156,50 @@ The Slurm (a job scheduling and management system) is started automatically with
 4.	Once the pipeline is finished the Docker can be closed.
 
 
-With Singularity
+**With Singularity**
 
-1.	Shell in the Singularity container image file *.sif containing the entire environment:
+1. Shell in the Singularity container image file *.sif containing the entire environment:
+```
+singularity shell --writable |
+            --bind /path/to/reference:/usr/local/reference |
+            dscage-pe2.sif
+```
 
-$ singularity shell --writable |
---bind /path/to/reference:/usr/local/reference |
-dscage-pe2.sif
-
-
-2.	Set up and start a Slurm cluster
-
+2. Set up and start a Slurm cluster
+```
 (singularity)$ /etc/start-slurm-services.sh
+```
 
-3.	Change the current directory to the directory containing the input fastq files
-
+3. Change the current directory to the directory containing the input fastq files
+```
 (singularity)$ cd </path/input_fastq_dir/>
+```
 
 4. Start the pipeline
-   (singularity)$ CAGE_PE_pipeline.sh -s 8 -c 4 -t 8
+```
+(singularity)$ CAGE_PE_pipeline.sh -s 8 -c 4 -t 8
+```
 
-5.	Once the pipeline is finished, the Docker can be closed, but stop the local-slurm service before exit container.
-   (singularity)$ /etc/stop-slurm-services.sh
-   (singularity)$ exit
+5. Once the pipeline is finished, the Docker can be closed, but stop the local-slurm service before exit container.
+```
+(singularity)$ /etc/stop-slurm-services.sh
+(singularity)$ exit
+```
 
 
-
-CAGE_PE_pipeline.sh -s <number of samples> -c <concurrent samples to process> -t <number of threads>
+CAGE_PE_pipeline.sh -s number_of_samples -c concurrent_samples_to_process -t number_of_threads
 
 Options:
-•	-s <number of samples> (mandatory): Specify the number of samples (numeric value).
-•	-c <concurrent jobs to be processed> (mandatory): Specify the number of concurrent jobs to be processed (numeric value).
-•	-t <number of threads> (optional): Specify the number of threads (numeric value). If not provided, it defaults to 8.
+- -s number_of_samples (mandatory): Specify the number of samples (numeric value).
+- -c concurrent_samples_to_process (mandatory): Specify the number of concurrent jobs to be processed (numeric value).
+- -t number_of_threads (optional): Specify the number of threads (numeric value). If not provided, it defaults to 8.
 
 
 After submitting jobs using this pipeline, you can check their status and cancel them if necessary, using the following commands: squeue, scancel.
-## For detailed information and usage, please refer to the Slurm manual available at (https://slurm.schedmd.com/documentation.html)
+For detailed information and usage, please refer to the [Slurm manual](https://slurm.schedmd.com/documentation.html).
 
 
-[In case of other species]
-!! When you'd like to use genome other than human and mouse, at first you have to prepare some files. !!
 
-1. genome.fa
-2. rDNA.fa
-3. bed files for hierarchical intersect
-
-1.	genome.fa
-Save the fasta file of genome as /path/to/reference/genome.fa
-And you have to make STAR index.
-
-Start docker or singularity container with mount reference directory.
-$ docker run -it |
---mount type=bind,source=/path/to/reference,target=/usr/local/reference |
-hsueki/dscage-pe2
-
-(docker)$ cd /usr/local/reference
-(docker)$ mkdir STAR 
-(docker)$ STAR --runMode genomeGenerate \
---genomeDir STAR \
---genomeFastaFiles genome.fa \
---sjdbGTFfile genome.gtf \
---limitGenomeGenerateRAM 3400000000
-
-(docker)$ mv genome.fa STAR
-
- It takes time to make STAR index...
- Please refer to STAR docs how to prepare STAR index.
- After the STAR index is generaged, please exit the container. 
- Then run the container as written  as above, with mount your data and reference directories..
-
-
-2.	rDNA.fa
-Save the rDNA.fa as /path/to/reference/ribosomalRNA/rDNA.fa
-
-
-3.	bed files for hierarchical intersect
-We prepare annotation bed files using UCSC table browser.
-(https://genome.ucsc.edu/cgi-bin/hgTables)
-
-Select these datasets and get output knownGene as BED files.
-
-upstream100.bed
-5UTR_exon.bed
-coding_exon.bed
-3UTR_exon.bed
-downstream100.bed
-intron.bed
-
-Save these bed files to /path/to/reference/hierarchical_intersect/
-
-If you cannot prepare these annotation bed files, you can run CAGE pipeline and get results without annotation of CAGE tags. 
 
 
 <reference directory>
@@ -284,7 +237,7 @@ The pipeline is structured to perform the following steps in sequence:
 6. BAM to CTSS with G correction
 7. Hierarchical Intersection and Clustering
 
-### 1. Raw base distribution and quality score distribution calculation
+### i. Raw base distribution and quality score distribution calculation
 
 This step generates QC plots to examine the raw base distribution and raw quality score distribution for read 1 (R1) and read 2 (R2).
 
@@ -305,7 +258,7 @@ figs/QC/
  sample.R2.raw_QV_distribution.png　
       
 
-### 2. Sequence trimming
+### ii. Sequence trimming
 
 This process consists in trimming of low-quality base calls from the end of the reads (Phred score > 30), adapter removal (based on a comprehensive list of standard adapters), filtering of reads contains any “Ns” and short sequence filtering (< 15 bp).
 
@@ -334,7 +287,7 @@ Outputs:
 
  
 
-### 3. rRNA sequences removal
+### iii. rRNA sequences removal
 
 This portion of the script is responsible for removing sequences that match ribosomal RNA (rRNA) sequences.
 
@@ -361,7 +314,7 @@ Outputs:
 
   
 
-### 4. Paired-end reads matching
+### iv. Paired-end reads matching
 
 This step matches and selects paired sequences by comparing the original FASTQ file pairs to the filtered FASTQ file pairs.
 
@@ -381,7 +334,7 @@ Output:
 |tmp/|_sample_.R1.paired.fq<br />_sample_.R2.paired.fq|Matched paired FASTQ files|
 
 
-### 5. Mapping with STAR
+### v. Mapping with STAR
 
 Sequences are mapped with STAR (2.7.4a). Mapped data is then sorted with read name, ofiltered to rto retain properly mapped reads (MAPQ > 10).. OReads from the filtered BAM file that are the first and second mates of a pair (R1 and R2 reads) are selected, sorted by coordinates and indexed.
 
@@ -422,7 +375,7 @@ Of note, since in STAR, paired-end reads are treated as a single read,  the pair
 
 
  				 		
-### 6. BAM to CTSS with G correction
+### vi. BAM to CTSS with G correction
  This step performs a conversion of the BAM file into a CTSS BED file while applying a G correction to account for incorrect G in first base, based on the supplementary note 3e of Nature genet 38:626-35.
 
 
@@ -451,7 +404,7 @@ Outputs:
 
 		
 
-### 7. Hierarchical Intersection
+### vii. Hierarchical Intersection
 The CTSS files are filtered and annotated using hierarchical_intersect. This tool intersects with each annotation bed file in a hierarchical manner the several regions stored as BED files in /usr/local/reference/hierarchical_intersect : upstream100, 5UTR_exon, coding_exon, 3UTR_exon, intron and downstream100. When the annotation bed files are not found, this step will be skipped.
 
 Input:
@@ -475,7 +428,7 @@ Outputs:
 |figs/|promoter_percent.pdf|Bar plot with stacked bars, where each bar represents the percentage distribution of promoters for different types of regions.
 
 
-### 8. Analysis of Paired BAM files
+### viii. Analysis of Paired BAM files
 
 BED12 format provides a more comprehensive representation of genomic features, particularly useful for analyzing spliced alignments. This step converts 'properly paired' BAM alignments to BED12 format and create CAGEscan clusters from the BED12 file.
 
@@ -499,7 +452,7 @@ Outputs:
 |map/|_sample_.CAGEscan.bed|Column 4 (cluster name): Lx_chr_strand_start_end with the chr,strand,start and end of the TSS single-linkage derived clusters, Column5 (score): number of input paired-end tags of the CAGEscan cluster
 <br/>
 
-### 9. Generating peak file from single-nucleotide CTSS
+### ix. Generating peak file from single-nucleotide CTSS
 This step performs generates a peak file using all single-nucleotide CTSS files of a given project performs peak calling using the Paraclu algorithm, which is commonly employed for clustering and peak detection in genomic data analysis pipelines. Counts for each peak is detailed per sample.
 
 
