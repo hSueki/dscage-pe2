@@ -105,14 +105,14 @@ Table of content
 	```
 
 	In the container,
-	```
+```
 	cd /usr/local/reference
 	STAR --runMode genomeGenerate \
-     	     --genomeDir STAR \
-     	     --genomeFastaFiles STAR/genome.fa \
-     	     --sjdbGTFfile genome.gtf \
-     	     --limitGenomeGenerateRAM 3400000000
-	```
+	     --genomeDir STAR \
+	     --genomeFastaFiles STAR/genome.fa \
+	     --sjdbGTFfile genome.gtf \
+	     --limitGenomeGenerateRAM 3400000000
+```
 
  It takes time to make STAR index...<br/>
  Please refer to STAR docs how to prepare STAR index.<br/>
