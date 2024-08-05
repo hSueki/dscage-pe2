@@ -118,16 +118,21 @@ Table of content
  Please refer to STAR docs how to prepare STAR index.<br/>
  After the STAR index is generaged, please exit the container. 
 
-   
+ The directory and file name under the reference directory should be the same for all species, like this...<br/><br/>
+ ![directory_file_names](https://github.com/user-attachments/assets/76811d84-029f-4f19-ba7a-3a752595308b)
 
+
+
+<br/>
 
 ## 3.	Input
-     The input files required are paired FASTQ files. The accepted naming convention for the FASTQ files is _sample_.R1.fq.gz and _sample_.R2.fq.gz.
-     The the input files must be copied within a single input directory: </path/input_fastq_dir/>
+The input files required are paired FASTQ files. The accepted naming convention for the FASTQ files is _sample_.R1.fq.gz and _sample_.R2.fq.gz.
+The the input files must be copied within a single input directory: </path/input_fastq_dir/>
+<br/>
 
 ## 4.	Usage
 
-    How to Set up and start Docker or Singularity
+How to Set up and start Docker or Singularity
 
 **With Docker** 
 1.	Run a Docker container using the loaded image (hsueki/dscage-pe2). Mount the reference  and your local data directory to the container.
@@ -155,13 +160,11 @@ The Slurm (a job scheduling and management system) is started automatically with
 
 4.	Once the pipeline is finished the Docker can be closed.
 
-
 **With Singularity**
 
 1. Shell in the Singularity container image file *.sif containing the entire environment:
 ```
-singularity shell --writable |
-            --bind /path/to/reference:/usr/local/reference |
+singularity shell --writable --bind /path/to/reference:/usr/local/reference |
             dscage-pe2.sif
 ```
 
@@ -198,32 +201,7 @@ Options:
 After submitting jobs using this pipeline, you can check their status and cancel them if necessary, using the following commands: squeue, scancel.
 For detailed information and usage, please refer to the [Slurm manual](https://slurm.schedmd.com/documentation.html).
 
-
-
-
-
-<reference directory>
-The directory and file name under the reference directory should be the same for all species.
-
- ----- hg38/<br />
-   |    |-- reference/<br />
-   |          |-- STAR/STAR_INDEX_FILES, genome.fa<br />
-   |          |-- ribosomalRNA/rDNA.fa<br />
-   |          |-- hierarchical_intersect/BED_FILES<br />
-   |<br />
-   |-- mm10/<br />
-   |    |-- reference/<br />
-   |          |-- STAR/STAR_INDEX_FILES, genome.fa<br />
-   |          |-- ribosomalRNA/rDNA.fa<br />
-   |          |-- hierarchical_intersect/BED_FILES<br />
-   |<br />
-   |-- other_species/<br />
-   |    |-- reference/<br />
-   |          |-- STAR/STAR_INDEX_FILES, genome.fa<br />
-   |          |-- ribosomalRNA/rDNA.fa<br />
-   |          |-- hierarchical_intersect/BED_FILES<br />
-   |<br />
-
+<br/>
 
 ## 5.	Main steps
 
@@ -242,20 +220,20 @@ The pipeline is structured to perform the following steps in sequence:
 This step generates QC plots to examine the raw base distribution and raw quality score distribution for read 1 (R1) and read 2 (R2).
 
 Inputs:
-<sample>.R1.fq.gz 
-<sample>.R2.fq.gz
+- _sample_.R1.fq.gz
+- _sample_.R2.fq.gz
 
 Tools:
-•	baseSeq: A tool for calculating raw base distribution [ref].
-•	Graph.sh: A script for generating graphical plots [ref].
-•	qvSeq: A tool for calculating raw quality score distribution [ref].
+- baseSeq: A tool for calculating raw base distribution [ref].
+- Graph.sh: A script for generating graphical plots [ref].
+- qvSeq: A tool for calculating raw quality score distribution [ref].
 
 Outputs:
 Figures presenting the ｒaw base and raw quality score distribution for read 1 (R1) and read 2 (R2) are generated.
-figs/QC/ 
- sample.R1.raw_base_distribution.png
- sample.R2.raw_base_distribution.png      sample.R1.raw_QV_distribution.png
- sample.R2.raw_QV_distribution.png　
+|Directory|File|
+|----|----|
+|figs/QC/|_sample_.R1.raw_base_distribution.png<br/>_sample_.R2.raw_base_distribution.png|
+||_sample_.R1.raw_QV_distribution.png<br/>_sample_.R2.raw_QV_distribution.png|　
       
 
 ### ii. Sequence trimming
@@ -264,11 +242,11 @@ This process consists in trimming of low-quality base calls from the end of the 
 
 
 Inputs:
-_sample_.R1.fq.gz 
-_sample_.R2.fq.gz
+- _sample_.R1.fq.gz
+- _sample_.R2.fq.gz
 
 Tool:
-•	trim_galore version 0.6.10 [ref]: A tool for quality-based trimming and adapter removal. TrimGalore is wrapper that applies Cutadapt to trim perform adapter and quality trimming to FASTQ files.
+- trim_galore version 0.6.10 [ref]: A tool for quality-based trimming and adapter removal. TrimGalore is wrapper that applies Cutadapt to trim perform adapter and quality trimming to FASTQ files.
 
 Parameters:
 trim_galore main parameters used:
