@@ -2,14 +2,21 @@
 
 A complete analytical framework tailored for the analysis of direct cDNA CAGE data.
 
-Authors: [TO ADD]
+**Authors:** Diane Delobel<sup>1</sup>, Hiromi Nishiyori-Sueki<sup>1</sup>, Ilaria Nisoli<sup>2</sup>, Hideya Kawaji<sup>x</sup>,  Pauline Robbe<sup>1</sup> ,Piero Carninci<sup>1,2</sup>, Hazuki Takahashi<sup>1</sup>
+<br />
 
-Table of content
+1: RIKEN Center for Integrative Medical Sciences (IMS), Yokohama, 230-0045, Japan <br/>
+2: Human Technopole Research Center for Genomics, Milan, 20157, Italy<br/>
+x: Kawaji-san<br/>
+
+
+
+### Table of content
 
 1.	Introduction
 2.	Installation
 3.	Input
-4.	[Usage]
+4.	Usage
 5.	Main steps
     1. Raw base distribution and quality score distribution calculation
     2. Sequence trimming
@@ -20,7 +27,6 @@ Table of content
     7. Hierarchical Intersection
     8. Analysis of Paired BAM files
     9. Generating peak file from single-nucleotide CTSS
-  
 6.	Brief descriptions of all output file
 
 ## 1.	Introduction
@@ -29,11 +35,11 @@ Table of content
   This pipeline supports paired-end sequence data only.
   This pipeline takes demultiplexed paired-end FASTQ files as input, and includes steps to perform: read quality control, read trimming for low quality bases, filtering of short reads, rRNA removal, mapping, conversion to BED file containing CAGE transcription start sites (CTSS) with G correction, annotations of these CTSSs and clustering for peak calling.
 
-  This analysis pipeline handles jobs using Slurm [ref] allowing for simultaneous processing of multiple samples and comes in a Singularity [ref] and Docker containers [ref], available via <https://github.com/hSueki/dscage-pe2>.
+  This analysis pipeline handles jobs using [Slurm](https://slurm.schedmd.com/documentation.html) allowing for simultaneous processing of multiple samples and comes in a [Singularity](https://docs.sylabs.io/guides/3.5/user-guide/quick_start.html#quick-installation-steps)  and [Docker containers](https://docs.docker.com/).
 
 
 ## 2.	Installation
-1.	Install any of Singularity [ref] or Docker [ref].
+1.	Install any of [Singularity](https://docs.sylabs.io/guides/3.5/user-guide/quick_start.html#quick-installation-steps) or [Docker](https://docs.docker.com/).
 2.	Download the container image file containing CAGE pipeline.
 
 	**With Docker**: 
@@ -62,7 +68,7 @@ Table of content
 	**In case of Human and Mouse data**<br />
 		Download the archived reference and save on your local directory.<br />
 		Extract the reference using tar command.　<br />
-		This archive contains annotation bed files and rDNA.fa.
+		This archive contains annotation bed files and rDNA.fa for Human/Mouse.
 	```
 	tar -zxvf hg38.tar.gz
 	```
@@ -135,30 +141,35 @@ The the input files must be copied within a single input directory: </path/input
 How to Set up and start Docker or Singularity
 
 **With Docker** 
-1.	Run a Docker container using the loaded image (hsueki/dscage-pe2). Mount the reference  and your local data directory to the container.
+1. Run a Docker container using the loaded image (hsueki/dscage-pe2). Mount the reference  and your local data directory to the container.
 ```
-  $ docker run -it |
+  docker run -it |
     --mount type=bind,source=/path/to/reference,target=/usr/local/reference |
     --mount type=bind,source=/path/input_fastq_dir,target=/root/data |  
     hsueki/dscage-pe2
 ```
+>[!IMPORTANT]
+>The path of target directories should not be changed.
 
-The path of target directories should not be changed.
+>[!NOTE]
+>The Slurm (a job scheduling and management system) is started automatically within the container. You can verify this by running sinfo.
 
-The Slurm (a job scheduling and management system) is started automatically within the container. You can verify this by running sinfo.
+<br/>
 
+_In the docker container_ 
 
-2.	Change directory into the target directory 
+2. Change directory into the target directory 
 ```
-(docker)$ cd /root/data
+ cd /root/data
 ```
 
-3.	Start the pipeline
+3. Start the pipeline
 ```
-(docker)$ CAGE_PE_pipeline.sh -s 8 -c 4 -t 8
+ CAGE_PE_pipeline.sh -s 8 -c 4 -t 8
 ```
 
-4.	Once the pipeline is finished the Docker can be closed.
+4. Once the pipeline is finished the Docker can be closed.
+<br/>
 
 **With Singularity**
 
@@ -168,29 +179,33 @@ singularity shell --writable --bind /path/to/reference:/usr/local/reference |
             dscage-pe2.sif
 ```
 
+_In the singularity container_
+
 2. Set up and start a Slurm cluster
 ```
-(singularity)$ /etc/start-slurm-services.sh
+ /etc/start-slurm-services.sh
 ```
 
 3. Change the current directory to the directory containing the input fastq files
 ```
-(singularity)$ cd </path/input_fastq_dir/>
+ cd </path/input_fastq_dir/>
 ```
 
 4. Start the pipeline
 ```
-(singularity)$ CAGE_PE_pipeline.sh -s 8 -c 4 -t 8
+ CAGE_PE_pipeline.sh -s 8 -c 4 -t 8
 ```
 
 5. Once the pipeline is finished, the Docker can be closed, but stop the local-slurm service before exit container.
 ```
-(singularity)$ /etc/stop-slurm-services.sh
-(singularity)$ exit
+/etc/stop-slurm-services.sh
+exit
 ```
 
+<br/>
+<br/>
 
-CAGE_PE_pipeline.sh -s number_of_samples -c concurrent_samples_to_process -t number_of_threads
+**CAGE_PE_pipeline.sh -s number_of_samples -c concurrent_samples_to_process -t number_of_threads**
 
 Options:
 - -s number_of_samples (mandatory): Specify the number of samples (numeric value).
@@ -246,7 +261,7 @@ Inputs:
 - _sample_.R2.fq.gz
 
 Tool:
-- trim_galore version 0.6.10 [ref]: A tool for quality-based trimming and adapter removal. TrimGalore is wrapper that applies Cutadapt to trim perform adapter and quality trimming to FASTQ files.
+- [Trim Galore](https://github.com/FelixKrueger/TrimGalore) version 0.6.10 : A tool for quality-based trimming and adapter removal. TrimGalore is wrapper that applies Cutadapt to trim perform adapter and quality trimming to FASTQ files.
 
 Parameters:
 trim_galore main parameters used:
@@ -273,11 +288,11 @@ Inputs:
 - tmp/_sample_.R1_val_1.fq
 - tmp/_sample_.R2_val_2.fq
 - Sequences of ribosomal RNAs (../reference/ribosomalRNA/rDNA.fa):
-    - Human ribosomal DNA complete repeating unit: (Accession U13369; Version U13369.1 [ref])
-    - TPA_exp: Mus musculus ribosomal DNA, complete repeating unit (Accession BK000964; Version BK000964.1 [ref])
+    - Human ribosomal DNA complete repeating unit: ([Accession U13369; Version U13369.1](https://www.ncbi.nlm.nih.gov/nuccore/555853))
+    - TPA_exp: Mus musculus ribosomal DNA, complete repeating unit ([Accession BK000964; Version BK000964.1](https://www.ncbi.nlm.nih.gov/nuccore/BK000964.1))
 
 Tools:
-- RNAdust 1.06 [ref] 
+- [rRNAdust](https://fantom.gsc.riken.jp/5/sstar/Protocols:rRNAdust) 1.06 
 - SampleTopSeq
 
 Outputs:
@@ -314,15 +329,15 @@ Output:
 
 ### v. Mapping with STAR
 
-Sequences are mapped with STAR (2.7.4a). Mapped data is then sorted with read name, ofiltered to rto retain properly mapped reads (MAPQ > 10).. OReads from the filtered BAM file that are the first and second mates of a pair (R1 and R2 reads) are selected, sorted by coordinates and indexed.
+Sequences are mapped with STAR (2.7.4a). Mapped data is then sorted with read name, filtered to retain properly mapped reads (MAPQ > 10). Reads from the filtered BAM file that are the first and second mates of a pair (R1 and R2 reads) are selected, sorted by coordinates and indexed.
 
 Inputs:
 - Genome: Specifies the genome being used (genome.fa)
 - tmp/_sample_.R1.paired.fq and tmp/_sample_.R2.paired.fq: Paired-end FASTQ files after rRNA removal and read matching. 
 
 Tools:
-- STAR (2.7.4a) [ref]
-- Samtools 1.19 (Using htslib 1.19) [ref]
+- [STAR (2.7.4a)](https://github.com/alexdobin/STAR/releases/tag/2.7.4a)
+- [Samtools 1.19](https://github.com/samtools/samtools/releases/tag/1.19)
 - SampleTopSeq
 
 Parameters:
@@ -363,7 +378,7 @@ Input:
 - Reference genome FASTA file as used by STAR (genome.fa)
 
 Tools:
-- starBam2GcorrectedCtss_nbg.sh Version 0.1 [ref]
+- [starBam2GcorrectedCtss_nbg.sh](https://github.com/hkawaji/2016-starBam2GcorrectedCtss) Version 0.1
 
 Parameters:
 - -q 10: Only reads with a mapping quality of 10 or higher will be considered for CTSS generation.
@@ -375,7 +390,6 @@ Outputs:
 |summary/|mapping.txt|mapping summary for all samples which includes the following counts of reads: raw, trimmed_adapters_Nsequences,paired, mapq10, multimap, unmapped, and rRNA.|
 |tmp/|_sample_.mapsummary.txt|Making a Mapping summary file which includes the following counts of reads: raw, trimmed_adapters_Nsequences,paired, mapq10, multimap, unmapped, and rRNA.|
 |summary/|STARsummary_perc.txt|mapping summary for all samples which includes the Statistics from STAR, including input: total number of input reads processed by the aligner; mapq10: % of reads that were mapped with a mapping quality (MAPQ) score of 10 or higher; multi: % of reads that mapped to multiple genomic locations; too_many: % of reads that mapped to too many genomic locations, possibly indicating a problem with mapping specificity; unmap_mismatch: % of reads that were unmapped due to mismatches with the reference genome; unmap_short: % of reads that were too short to be mapped.; unmap_other: % of unmapped reads due to reasons other.|
-
 |tmp/|sample.STARsummary_perc.txt|Statistics from STAR, including input: total number of input reads processed by the aligner; mapq10: % of reads that were mapped with a mapping quality (MAPQ) score of 10 or higher; multi: % of reads that mapped to multiple genomic locations; too_many: % of reads that mapped to too many genomic locations, possibly indicating a problem with mapping specificity; unmap_mismatch: % of reads that were unmapped due to mismatches with the reference genome; unmap_short: % of reads that were too short to be mapped.; unmap_other: % of unmapped reads due to reasons other.|
 |figs/|STARmap_percent.pdf|Bar plot with stacked bars, where each bar represents the percentage distribution of different STAR-specific mapping statistics for different samples.|
 |tmp/|sample.mapsummary.txt|Statistics from STAR, including: the total number of raw sequencing reads; the number of sequences that were trimmed due to the presence of adapters; the number of reads that remained paired after preprocessing and filtering steps; the number of reads that were mapped with a mapping quality (MAPQ) score of 10 or higher; the number of reads that mapped to multiple genomic locations; the number of reads that were not successfully mapped to the reference genome; the number of reads that were identified as ribosomal RNA (rRNA) sequences.| 
