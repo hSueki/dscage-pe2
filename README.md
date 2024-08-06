@@ -91,13 +91,13 @@ x: Kawaji-san<br/>
 				- downstream100.bed
 				- intron.bed
 
-	- Save these bed files to `/path/to/reference/hierarchical_intersect/`<br/>
+	Save these bed files to `/path/to/reference/hierarchical_intersect/`<br/>
 	If you cannot prepare these annotation bed files, you can run CAGE pipeline and get results without annotation of CAGE tags. 
 <br/>
 
 4. Make STAR index
 
-	Save the fasta file of genome as '/path/to/reference/STAR/genome.fa'. <br/>
+	Save the fasta file of genome as `/path/to/reference/STAR/genome.fa`. <br/>
    You will also need to create a STAR index.
 
 	Start Docker or Singularity container with mounted reference directory.
@@ -134,8 +134,7 @@ Within the container, run the following commands to generate the STAR index.
 
 ## 3.	Input
 The input files required are paired FASTQ files. The accepted naming convention for the FASTQ files is _sample_.R1.fq.gz and _sample_.R2.fq.gz.
-The the input files must be copied within a single input directory: '/path/input_fastq_dir/'
-<br/>
+The the input files must be copied within a single input directory: `/path/input_fastq_dir/` <br/>
 
 ## 4.	Usage
 
@@ -174,7 +173,7 @@ _Within the docker container_
 
 **With Singularity**
 
-1. Shell in the Singularity container image file *.sif containing the entire environment:
+1. Shell in the Singularity container image file `dscage-pe2.sif` containing the entire environment:
 ```
 singularity shell --writable --bind /path/to/reference:/usr/local/reference |
             dscage-pe2.sif
@@ -189,7 +188,7 @@ _Within the singularity container_
 
 3. Change the current directory to the directory containing the input fastq files
 ```
- cd </path/input_fastq_dir/>
+ cd /path/input_fastq_dir/
 ```
 
 4. Start the pipeline
@@ -209,12 +208,12 @@ exit
 **CAGE_PE_pipeline.sh -s number_of_samples -c concurrent_samples_to_process -t number_of_threads**
 
 Options:
-- -s number_of_samples (mandatory): Specify the number of samples (numeric value).
-- -c concurrent_samples_to_process (mandatory): Specify the number of concurrent jobs to be processed (numeric value).
-- -t number_of_threads (optional): Specify the number of threads (numeric value). If not provided, it defaults to 8.
+- `-s` number_of_samples (mandatory): Specify the number of samples (numeric value).
+- `-c` concurrent_samples_to_process (mandatory): Specify the number of concurrent jobs to be processed (numeric value).
+- `-t` number_of_threads (optional): Specify the number of threads (numeric value). If not provided, it defaults to 8.
 
 
-After submitting jobs using this pipeline, you can check their status and cancel them if necessary, using the following commands: squeue, scancel.
+After submitting jobs using this pipeline, you can check their status and cancel them if necessary, using the following commands: `squeue`, `scancel`.
 For detailed information and usage, please refer to the [Slurm manual](https://slurm.schedmd.com/documentation.html).
 
 <br/>
@@ -266,8 +265,8 @@ Tool:
 
 Parameters:
 trim_galore main parameters used:
-- --paired: Input data are paired-end reads.
-- --phred33: Phred quality score offset.
+- `--paired`: Input data are paired-end reads.
+- `--phred33`: Phred quality score offset.
 - -q 30: Quality threshold for trimming.
 - --length 15: Minimum length of reads to be kept after trimming.
 - --trim-n: Trims low-quality ends of reads based on quality scores.
