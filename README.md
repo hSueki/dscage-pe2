@@ -66,20 +66,20 @@ x: Kawaji-san<br/>
 3. Prepare fasta and bed files
    
 	**In case of Human and Mouse data**<br />
-		Download the archived reference and save on your local directory.<br />
-		Extract the reference using tar command.　<br />
-		This archive contains annotation bed files and rDNA.fa for Human/Mouse.
+	- Download the archived reference and save on your local directory.<br />
+		  Extract the reference using tar command.　<br />
+		  This archive contains annotation bed files and rDNA.fa for Human/Mouse.
+	```shell
+		tar -zxvf hg38.tar.gz
 	```
-	tar -zxvf hg38.tar.gz
-	```
-	Prepare the fasta file of [human](https://www.encodeproject.org/files/GRCh38_no_alt_analysis_set_GCA_000001405.15/)/[mouse genome](https://www.encodeproject.org/files/mm10_no_alt_analysis_set_ENCODE/) and save it to extracted reference directory as reference/STAR/genome.fa . <br/><br/>
+	- Prepare the fasta file of [human](https://www.encodeproject.org/files/GRCh38_no_alt_analysis_set_GCA_000001405.15/)/[mouse genome](https://www.encodeproject.org/files/mm10_no_alt_analysis_set_ENCODE/) and save it to extracted reference directory as `/path/to/reference/STAR/genome.fa`. <br/><br/>
  	
 
 	**In case of other species**<br/>
-		Prepare the fasta files and bed files:
+	- Prepare the fasta files and bed files:
 
-	+ genome.fa:	Save geneme.fa to /path/to/reference/STAR
-	+ rDNA.fa:	Save rDNA.fa to /path/to/reference/ribosomalRNA
+	+ genome.fa:	Save geneme.fa to `/path/to/reference/STAR`
+	+ rDNA.fa:	Save rDNA.fa to `/path/to/reference/ribosomalRNA`
 	+ annotation bed files for hierarchical intersect <br/>
 		We prepare annotation bed files using [UCSC table browser](https://genome.ucsc.edu/cgi-bin/hgTables).<br />
 		Select these datasets and get output knownGene as BED files.
@@ -91,16 +91,16 @@ x: Kawaji-san<br/>
 				- downstream100.bed
 				- intron.bed
 
-	Save these bed files to /path/to/reference/hierarchical_intersect/<br/>
+	- Save these bed files to `/path/to/reference/hierarchical_intersect/`<br/>
 	If you cannot prepare these annotation bed files, you can run CAGE pipeline and get results without annotation of CAGE tags. 
 <br/>
 
 4. Make STAR index
 
-	Save the fasta file of genome as /path/to/reference/STAR/genome.fa <br/>
-	And you have to make STAR index.
+	Save the fasta file of genome as '/path/to/reference/STAR/genome.fa'. <br/>
+   You will also need to create a STAR index.
 
-	Start docker or singularity container with mount reference directory.
+	Start Docker or Singularity container with mounted reference directory.
 
 	```
 	docker run -it --mount type=bind,source=/path/to/reference,target=/usr/local/reference hsueki/dscage-pe2
@@ -110,9 +110,10 @@ x: Kawaji-san<br/>
 	singularity shell --writable --bind /path/to/reference:/usr/local/reference dscage-pe2.sif
 	```
 
-	In the container,
+Within the container, run the following commands to generate the STAR index.
 ```
 	cd /usr/local/reference
+
 	STAR --runMode genomeGenerate \
 	     --genomeDir STAR \
 	     --genomeFastaFiles STAR/genome.fa \
@@ -120,12 +121,12 @@ x: Kawaji-san<br/>
 	     --limitGenomeGenerateRAM 3400000000
 ```
 
- It takes time to make STAR index...<br/>
+ It takes time to make STAR index.<br/>
  Please refer to STAR docs how to prepare STAR index.<br/>
  After the STAR index is generaged, please exit the container. 
 
- The directory and file name under the reference directory should be the same for all species, like this...<br/><br/>
- ![directory_file_names](https://github.com/user-attachments/assets/76811d84-029f-4f19-ba7a-3a752595308b)
+ Ensure the directory and file names under the reference directory are the same for all species, like this...<br/><br/>
+ ![Reference directory structure](https://github.com/user-attachments/assets/76811d84-029f-4f19-ba7a-3a752595308b)
 
 
 
@@ -133,7 +134,7 @@ x: Kawaji-san<br/>
 
 ## 3.	Input
 The input files required are paired FASTQ files. The accepted naming convention for the FASTQ files is _sample_.R1.fq.gz and _sample_.R2.fq.gz.
-The the input files must be copied within a single input directory: </path/input_fastq_dir/>
+The the input files must be copied within a single input directory: '/path/input_fastq_dir/'
 <br/>
 
 ## 4.	Usage
@@ -152,11 +153,11 @@ How to Set up and start Docker or Singularity
 >The path of target directories should not be changed.
 
 >[!NOTE]
->The Slurm (a job scheduling and management system) is started automatically within the container. You can verify this by running sinfo.
+>The Slurm (a job scheduling and management system) is started automatically within the container. You can verify this by running `sinfo`.
 
 <br/>
 
-_In the docker container_ 
+_Within the docker container_ 
 
 2. Change directory into the target directory 
 ```
@@ -179,7 +180,7 @@ singularity shell --writable --bind /path/to/reference:/usr/local/reference |
             dscage-pe2.sif
 ```
 
-_In the singularity container_
+_Within the singularity container_
 
 2. Set up and start a Slurm cluster
 ```
