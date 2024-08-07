@@ -45,7 +45,7 @@ x: Kawaji-san<br/>
 	**With Docker**: 
 	Pull the docker image from ghcr.io 
 	```
-	docker pull ghcr.io/hsueki/dscage-pe2:latest
+	docker pull ghcr.io/hsueki/dscage_pe2:latest
 	```
 
 	
