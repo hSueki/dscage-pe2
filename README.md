@@ -175,8 +175,8 @@ _Within the docker container_
 
 1. Shell in the Singularity container image file `dscage-pe2.sif` containing the entire environment:
 ```
-singularity shell --writable --bind /path/to/reference:/usr/local/reference |
-            dscage-pe2.sif
+ singularity shell --writable --bind /path/to/reference:/usr/local/reference |
+             dscage-pe2.sif
 ```
 
 _Within the singularity container_
@@ -222,13 +222,15 @@ For detailed information and usage, please refer to the [Slurm manual](https://s
 
 The pipeline is structured to perform the following steps in sequence:
 
-1. Raw base distribution and quality score distribution calculation
-2. Sequence trimming
-3. rRNA sequences removal
-4. Paired-end reads matching
-5. STAR Mapping
-6. BAM to CTSS with G correction
-7. Hierarchical Intersection and Clustering
+	   i. Raw base distribution and quality score distribution calculation <br/>
+	  ii. Sequence trimming <br/>
+	 iii. rRNA sequences removal <br/>
+	  iv. Paired-end reads matching <br/>
+	   v. Mapping with STAR <br/>
+	  vi. BAM to CTSS with G correction <br/>
+	 vii. Hierarchical Intersection <br/>
+	viii. Analysis of Paired BAM files <br/>
+	  iX. Generating peak file from single-nucleotide CTSS <br/>
 
 ### i. Raw base distribution and quality score distribution calculation
 
@@ -359,7 +361,7 @@ Outputs:
 |map/       |_sample_.R1.mapq10.bam<br />_sample_.R1.mapq10.bam.bai<br />_sample_.R2.mapq10.bam                                           |Sorted and indexed BAM files for R1 and R2 reads
 |map/       |_sample_.Unmapped.out.mate1<br />_sample_.Unmapped.out.mate2                                                                   |Unmapped reads in Fastx format
 |summary/   |_sample_.R1.top100_unmapped.txt<br />_sample_.R2.top100_unmapped.txt<br />_sample_.R1.top100_mapped.txt<br />_sample_.R2.top100_mapped.txt    |Top 100 sequences from mapped and unmapped files
-|log/       |_sample_.Log.final.out|Statistics from STAR: Number of input reads, % Uniquely mapped reads, of reads mapped to multiple loci, % of reads mapped to too many loci, % of reads unmapped: too many mismatches, % of reads unmapped: too short, % of reads unmapped: other
+|log/       |_sample_.Log.final.out|Statistics from STAR: Number of input reads<br/> Number and % of : <br/>- Uniquely mapped reads<br/> - reads mapped to multiple loci<br/>- reads mapped to too many loci<br/> - reads unmapped: too many mismatches<br/> - reads unmapped: too short<br> - reads unmapped: other|
 |log/      |_sample_.Log.out|Description of the execution of the STAR, including command line parameters, initial and final user parameters, effective command line, genome generation parameters and genome information.
 |log/      |_sample_.Log.progress.out|time-stamped record of progress during a process
 |log/      |_sample_.SJ.out.tab|List of the splice junctions detected during the alignment process. <br />The columns are as follow:   <br />Chromosome: Chromosomal location of the splice junction; <br />Start: Starting position of the splice junction; <br />End: Ending position of the splice junction; <br />Strand: Orientation of the splice junction; <br />Intron Motif: Represents the splice junction's motif, with "0" indicating unknown motif; <br />Support: Number of reads supporting the splice junction; <br />Annotated: Indicates whether the splice junction is annotated or novel.; <br />Unique: Indicates whether the splice junction is unique or shared; <br />Overhang: Length of the overhang.
