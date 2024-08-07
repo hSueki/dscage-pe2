@@ -104,11 +104,11 @@ x: Kawaji-san<br/>
 	Start Docker or Singularity container with mounted reference directory.
 
 	```
-	docker run -it --mount type=bind,source=/path/to/reference,target=/usr/local/reference hsueki/dscage-pe2
+	docker run -it --mount type=bind,source=/path/to/reference,target=/usr/local/reference hsueki/dscage_pe2
 	```
 	OR
 	```
-	singularity shell --writable --bind /path/to/reference:/usr/local/reference dscage-pe2.sif
+	singularity shell --writable --bind /path/to/reference:/usr/local/reference dscage_pe2.sif
 	```
 
 Within the container, run the following commands to generate the STAR index.
