@@ -260,7 +260,7 @@ Figures presenting the raw base and raw quality score distribution for read 1 (R
 |figs/QC/|_sample_.R1.raw_base_distribution.png<br/>_sample_.R2.raw_base_distribution.png|
 ||_sample_.R1.raw_QV_distribution.png<br/>_sample_.R2.raw_QV_distribution.png|　
       
-[^1]: Moirai[](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-15-144)
+[^1]: This script is part of [Moirai](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-15-144)
 
 ### ii. Sequence trimming
 
