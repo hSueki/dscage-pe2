@@ -230,15 +230,15 @@ For detailed information and usage, please refer to the [Slurm manual](https://s
 
 The pipeline is structured to perform the following steps in sequence:
 
-	   i. Raw base distribution and quality score distribution calculation <br/>
-	  ii. Sequence trimming <br/>
-	 iii. rRNA sequences removal <br/>
-	  iv. Paired-end reads matching <br/>
-	   v. Mapping with STAR <br/>
-	  vi. BAM to CTSS with G correction <br/>
-	 vii. Hierarchical Intersection <br/>
-	viii. Analysis of Paired BAM files <br/>
-	  iX. Generating peak file from single-nucleotide CTSS <br/>
+	   i. Raw base distribution and quality score distribution calculation
+	  ii. Sequence trimming
+	 iii. rRNA sequences removal
+	  iv. Paired-end reads matching
+	   v. Mapping with STAR
+	  vi. BAM to CTSS with G correction
+	 vii. Hierarchical Intersection
+	viii. Analysis of Paired BAM files
+	  iX. Generating peak file from single-nucleotide CTSS
 
 ### i. Raw base distribution and quality score distribution calculation
 
@@ -249,17 +249,18 @@ Inputs:
 - _sample_.R2.fq.gz
 
 Tools:
-- `baseSeq`: A tool for calculating raw base distribution [ref].
-- `Graph.sh`: A script for generating graphical plots [ref].
-- `qvSeq`: A tool for calculating raw quality score distribution [ref].
+- `baseSeq`: A tool for calculating raw base distribution[^1].
+- `Graph.sh`: A script for generating graphical plots[^1].
+- `qvSeq`: A tool for calculating raw quality score distribution[^1].
 
 Outputs:
-Figures presenting the ｒaw base and raw quality score distribution for read 1 (R1) and read 2 (R2) are generated.
+Figures presenting the raw base and raw quality score distribution for read 1 (R1) and read 2 (R2) are generated.
 |Directory|File|
 |----|----|
 |figs/QC/|_sample_.R1.raw_base_distribution.png<br/>_sample_.R2.raw_base_distribution.png|
 ||_sample_.R1.raw_QV_distribution.png<br/>_sample_.R2.raw_QV_distribution.png|　
       
+[^1]: Moirai[](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-15-144)
 
 ### ii. Sequence trimming
 
@@ -302,8 +303,8 @@ Inputs:
     - TPA_exp: Mus musculus ribosomal DNA, complete repeating unit ([Accession BK000964; Version BK000964.1](https://www.ncbi.nlm.nih.gov/nuccore/BK000964.1))
 
 Tools:
-- [rRNAdust](https://fantom.gsc.riken.jp/5/sstar/Protocols:rRNAdust) 1.06 
-- `SampleTopSeq`
+- [rRNAdust](https://fantom.gsc.riken.jp/5/sstar/Protocols:rRNAdust)[^1] 1.06 
+- `SampleTopSeq`[^1]
 
 Outputs:
 
@@ -329,7 +330,7 @@ Inputs:
 
 
 Tool:
-- MatchPairedEndSeq [ref]
+- MatchPairedEndSeq[^1]
 
 Output:
 |Directory|File|Description|
@@ -348,7 +349,7 @@ Inputs:
 Tools:
 - [STAR (2.7.4a)](https://github.com/alexdobin/STAR/releases/tag/2.7.4a)
 - [Samtools 1.19](https://github.com/samtools/samtools/releases/tag/1.19)
-- `SampleTopSeq`
+- `SampleTopSeq`[^1]
 
 Parameters:
 STAR
@@ -413,7 +414,7 @@ Input:
 - CTSS file: tmp/_sample_.R1.ctss.bed
 
 Tools:
-- `hierarchical_intersect.sh` [ref]
+- `hierarchical_intersect.sh`[^1]
 - `bedtools intersect` (aka intersectBed) v2.31.1
 
 Parameters:
