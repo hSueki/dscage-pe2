@@ -153,7 +153,7 @@ How to Set up and start Docker or Singularity
   docker run -it \
     --mount type=bind,source=/path/to/reference,target=/usr/local/reference \
     --mount type=bind,source=/path/input_fastq_dir,target=/root/data \  
-    hsueki/dscage_pe2
+    ghcr.io/hsueki/dscage_pe2
 ```
 >[!IMPORTANT]
 >The path of target directories should not be changed.
