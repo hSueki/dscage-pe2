@@ -104,7 +104,7 @@ x: Kawaji-san<br/>
 	Start Docker or Singularity container with mounted reference directory.
 
 	```
-	docker run -it --mount type=bind,source=/path/to/reference,target=/usr/local/reference hsueki/dscage_pe2
+	docker run -it --mount type=bind,source=/path/to/reference,target=/usr/local/reference ghcr.io/hsueki/dscage_pe2
 	```
 	OR
 	```
@@ -119,7 +119,7 @@ Within the container, run the following commands to generate the STAR index.
 	     --genomeDir STAR \
 	     --genomeFastaFiles STAR/genome.fa \
 	     --sjdbGTFfile genome.gtf \
-	     --limitGenomeGenerateRAM 3400000000
+	     --limitGenomeGenerateRAM 34000000000
 ```
 
 >[!NOTE]
@@ -150,10 +150,10 @@ How to Set up and start Docker or Singularity
 **With Docker** 
 1. Run a Docker container using the loaded image (hsueki/dscage-pe2). Mount the reference and your local data directory to the container.
 ```
-  docker run -it |
-    --mount type=bind,source=/path/to/reference,target=/usr/local/reference |
-    --mount type=bind,source=/path/input_fastq_dir,target=/root/data |  
-    hsueki/dscage-pe2
+  docker run -it \
+    --mount type=bind,source=/path/to/reference,target=/usr/local/reference \
+    --mount type=bind,source=/path/input_fastq_dir,target=/root/data \  
+    hsueki/dscage_pe2
 ```
 >[!IMPORTANT]
 >The path of target directories should not be changed.
@@ -183,8 +183,8 @@ _Within the docker container_
 
 1. Shell in the Singularity container image file `dscage-pe2.sif` containing the entire environment:
 ```
- singularity shell --writable --bind /path/to/reference:/usr/local/reference |
-             dscage-pe2.sif
+ singularity shell --writable --bind /path/to/reference:/usr/local/reference \
+             dscage_pe2.sif
 ```
 
 _Within the singularity container_
@@ -207,6 +207,7 @@ _Within the singularity container_
 5. Once the pipeline is finished, the Docker can be closed, but stop the local-slurm service before exit container.
 ```
 /etc/stop-slurm-services.sh
+
 exit
 ```
 
@@ -258,9 +259,9 @@ Figures presenting the raw base and raw quality score distribution for read 1 (R
 |Directory|File|
 |----|----|
 |figs/QC/|_sample_.R1.raw_base_distribution.png<br/>_sample_.R2.raw_base_distribution.png|
-||_sample_.R1.raw_QV_distribution.png<br/>_sample_.R2.raw_QV_distribution.png|　
+|figs/QC/|_sample_.R1.raw_QV_distribution.png<br/>_sample_.R2.raw_QV_distribution.png|　
       
-[^1]: This script is part of [Moirai](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-15-144)
+[^1]: These scripts are part of [Moirai](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-15-144)
 
 ### ii. Sequence trimming
 
