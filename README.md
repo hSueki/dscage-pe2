@@ -110,7 +110,7 @@ x: Kawaji-san<br/>
 	```
 	OR
 	```
-	singularity shell --writable --bind /path/to/reference:/usr/local/reference dscage_pe2.sif
+	singularity shell --writable --bind /path/to/reference:/usr/local/reference dscage_pe2_latest.sif
 	```
 
 Within the container, run the following commands to generate the STAR index.
@@ -187,7 +187,7 @@ _Within the docker container_
 1. Shell in the Singularity container image file `dscage-pe2.sif` containing the entire environment:
 ```
  singularity shell --writable --bind /path/to/reference:/usr/local/reference \
-             dscage_pe2.sif
+             dscage_pe2_latest.sif
 ```
 
 _Within the singularity container_
