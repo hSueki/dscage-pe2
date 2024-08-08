@@ -73,7 +73,7 @@ x: Kawaji-san<br/>
 		tar -zxvf hg38.tar.gz
 	```
 	- Prepare the fasta file of [human](https://www.encodeproject.org/files/GRCh38_no_alt_analysis_set_GCA_000001405.15/)/[mouse genome](https://www.encodeproject.org/files/mm10_no_alt_analysis_set_ENCODE/) and save it to extracted reference directory as `/path/to/reference/STAR/genome.fa`. <br/>
- 	- Prepare the GTF file of [human]() / [mouse] () and save it to extracted reference directory as `/path/to/reference/STAR/genome.gtf`.
+ 	- Prepare the GTF file of [human](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_39/gencode.v39.annotation.gtf.gz) / [mouse](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M35/gencode.vM35.annotation.gtf.gz) and save it to extracted reference directory as `/path/to/reference/STAR/genome.gtf`.
  	
 
 	**In case of other species**<br/>
