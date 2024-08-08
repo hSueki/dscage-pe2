@@ -117,11 +117,11 @@ Within the container, run the following commands to generate the STAR index.
 ```
 	cd /usr/local/reference
 
-	STAR --runMode genomeGenerate \
+	STAR --runThreadN 8 \
+             --runMode genomeGenerate \
 	     --genomeDir STAR \
 	     --genomeFastaFiles STAR/genome.fa \
-	     --sjdbGTFfile STAR/genome.gtf \
-	     --limitGenomeGenerateRAM 34000000000
+	     --sjdbGTFfile STAR/genome.gtf 
 ```
 
 >[!NOTE]
