@@ -11,7 +11,7 @@ x: Kawaji-san<br/>
 
 
 
-### Table of content
+### Table of contents
 
 1.	Introduction
 2.	Installation
@@ -26,64 +26,64 @@ x: Kawaji-san<br/>
     6. BAM to CTSS with G correction
     7. Hierarchical Intersection
     8. Analysis of Paired BAM files
-    9. Generating peak file from single-nucleotide CTSS
-6.	Brief descriptions of all output file
+    9. Generating a peak file from single-nucleotide CTSS
+6.	Brief descriptions of all output files
 
 ## 1.	Introduction
 
   This document presents the analysis pipeline that processes data generated from the direct cDNA CAGE library protocol. It provides a comprehensive description of the pipeline and paths of each output file generated throughout the analysis.
   This pipeline supports paired-end sequence data only.
-  This pipeline takes demultiplexed paired-end FASTQ files as input, and includes steps to perform: read quality control, read trimming for low quality bases, filtering of short reads, rRNA removal, mapping, conversion to BED file containing **CAGE transcription start sites (CTSS)** with G correction, annotations of these CTSSs and clustering for peak calling.
+  This pipeline takes demultiplexed paired-end FASTQ files as input, and includes steps to perform: read quality control, read trimming for low quality bases, filtering of short reads, rRNA removal, mapping, conversion to BED file containing **CAGE transcription start sites (CTSS)** with G correction, annotation of these CTSSs and clustering for peak calling.
 
-  This analysis pipeline handles jobs using [Slurm](https://slurm.schedmd.com/documentation.html) allowing for simultaneous processing of multiple samples and comes in a [Singularity](https://docs.sylabs.io/guides/3.5/user-guide/quick_start.html#quick-installation-steps)  and [Docker containers](https://docs.docker.com/).
+  This analysis pipeline handles jobs using [Slurm](https://slurm.schedmd.com/documentation.html) allowing for simultaneous processing of multiple samples and comes in a [Singularity](https://docs.sylabs.io/guides/3.5/user-guide/quick_start.html#quick-installation-steps)  and [Docker container](https://docs.docker.com/).
 
 
 ## 2.	Installation
-1.	Install any of [Singularity](https://docs.sylabs.io/guides/3.5/user-guide/quick_start.html#quick-installation-steps) or [Docker](https://docs.docker.com/).
-2.	Download the container image file containing CAGE pipeline.
+1.	Install either [Singularity](https://docs.sylabs.io/guides/3.5/user-guide/quick_start.html#quick-installation-steps) or [Docker](https://docs.docker.com/).
+2.	Download the container image file containing the CAGE pipeline.
 
 	**With Docker**: 
-	Pull the docker image from ghcr.io 
+	Pull the Docker image from ghcr.io 
 	```
 	docker pull ghcr.io/hsueki/dscage_pe2:latest
 	```
 
 	
 	**With Singularity**: 
-	Pull the singularity image file from Sylabs. 
+	Pull the Singularity image file from Sylabs. 
 	```
 	singularity pull --arch amd64 library://hsueki/dscage/dscage_pe2:latest
 	```
 
 
 >[!WARNING] 
->This docker image cannot be used with singularity.<br/>
->When you are using singularity, please use singularity image file.
+>This docker image cannot be used with Singularity.<br/>
+>When you are using Singularity, please use Singularity image file.
 
 
 <br/>
 
 3. Prepare fasta and bed files
    
-	**In case of Human and Mouse data**<br />
+	**In the case of Human and Mouse data**<br />
 	- Download the archived reference and save on your local directory.<br />
-		  Extract the reference using tar command.　<br />
+		  Extract the reference using the tar command.　<br />
 		  This archive contains annotation bed files and rDNA.fa for Human/Mouse.
 	```shell
 		tar -zxvf hg38.tar.gz
 	```
-	- Prepare the fasta file of [human](https://www.encodeproject.org/files/GRCh38_no_alt_analysis_set_GCA_000001405.15/)/[mouse genome](https://www.encodeproject.org/files/mm10_no_alt_analysis_set_ENCODE/) and save it to extracted reference directory as `/path/to/reference/STAR/genome.fa`. <br/>
- 	- Prepare the GTF file of [human](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_46/gencode.v46.annotation.gtf.gz)/ [mouse](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M23/gencode.vM23.annotation.gtf.gz) and save it to extracted reference directory as `/path/to/reference/STAR/genome.gtf`.
+	- Prepare the FASTA file of [human](https://www.encodeproject.org/files/GRCh38_no_alt_analysis_set_GCA_000001405.15/)/[mouse genome](https://www.encodeproject.org/files/mm10_no_alt_analysis_set_ENCODE/) and save it to extracted reference directory as `/path/to/reference/STAR/genome.fa`. <br/>
+ 	- Prepare the GTF file of the [human](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_46/gencode.v46.annotation.gtf.gz)/ [mouse](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M23/gencode.vM23.annotation.gtf.gz) and save it to extracted reference directory as `/path/to/reference/STAR/genome.gtf`.
  	
 
-	**In case of other species**<br/>
-	- Prepare the fasta files and bed files:
+	**In the case of other species**<br/>
+	- Prepare the FASTA files and BED files:
 
 	   + genome.fa:	Save the FASTA file of genome as `/path/to/reference/STAR/genome.fa`
-   	   + genome.gtf: Save the gtf file as `/path/to/reference/STAR/genome.gtf`.
-	   + rDNA.fa:	Save the FASTA file of ribosomalRNA as `/path/to/reference/ribosomalRNA/rDNA.fa`
-	   + annotation bed files for hierarchical intersect <br/>
-		We prepare annotation bed files using [UCSC table browser](https://genome.ucsc.edu/cgi-bin/hgTables).<br />
+   	   + genome.gtf: Save the GTF file as `/path/to/reference/STAR/genome.gtf`.
+	   + rDNA.fa:	Save the FASTA file of ribosomal RNA as `/path/to/reference/ribosomalRNA/rDNA.fa`
+	   + annotation BED files for hierarchical intersection <br/>
+		Prepare annotation BED files using [UCSC table browser](https://genome.ucsc.edu/cgi-bin/hgTables).<br />
 		Select the following datasets and output the knownGene as BED files.
    
 				- upstream100.bed
@@ -93,12 +93,12 @@ x: Kawaji-san<br/>
 				- downstream100.bed
 				- intron.bed
 
-	        Save these bed files to `/path/to/reference/hierarchical_intersect/`<br/>
+	        Save these BED files to `/path/to/reference/hierarchical_intersect/`<br/>
 >[!NOTE]
->When you cannot prepare these annotation bed files, you can still run the pipeline and obtain simple results without annotating of CAGE tags. 
+>When you cannot prepare these annotation bed files, you can still run the pipeline and obtain simple results without annotating the CAGE tags. 
 <br/>
 
-4. Make STAR index
+4. Create the STAR index
 
 	Save the fasta file of genome as `/path/to/reference/STAR/genome.fa`. <br/>
    You will also need to create a STAR index.
@@ -125,15 +125,15 @@ Within the container, run the following commands to generate the STAR index.
 ```
 
 >[!NOTE]
-> It takes time to make STAR index.<br/>
-> Please refer to STAR docs how to prepare STAR index and change the options.<br/>
+> It takes time to create the STAR index.<br/>
+> Please refer to STAR documentation on how to prepare the STAR index.<br/>
 
 
 >[!CAUTION]
-> The STAR index should be generated by same version with STAR used for mapping. <br/>
-> So, you should use STAR contained in the container.
+> The STAR index should be generated by the same version of STAR used for mapping. <br/>
+> It is recommended to use STAR provided in the container.
 
-After the STAR index is generaged, please exit the container. 
+After the STAR index is generated, please exit the container. 
 
  Ensure the directory and file names under the reference directory are the same for all species, like this...<br/><br/>
  ![Reference directory structure](https://github.com/user-attachments/assets/76811d84-029f-4f19-ba7a-3a752595308b)
