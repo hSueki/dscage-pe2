@@ -276,7 +276,7 @@ Inputs:
 - _sample_.R2.fq.gz
 
 Tool:
-- [Trim Galore](https://github.com/FelixKrueger/TrimGalore) version 0.6.10 : A tool for quality-based trimming and adapter removal. TrimGalore is wrapper that applies Cutadapt to trim perform adapter and quality trimming to FASTQ files.
+- [Trim Galore](https://github.com/FelixKrueger/TrimGalore) version 0.6.10 : A tool for quality-based trimming and adapter removal. TrimGalore is a wrapper that applies Cutadapt to perform adapter and quality trimming to FASTQ files.
 
 Parameters:
 trim_galore main parameters used:
