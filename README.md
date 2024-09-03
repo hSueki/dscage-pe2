@@ -358,8 +358,8 @@ Tools:
 Parameters:
 STAR
 - `--outFilterMultimapNmax 20`: Maximum number of multiple alignments allowed per read.
-- `--outSAMtype BAM Unsorted`: Format is output is unsorted BAM.
-- `--outReadsUnmapped Fastx`: unmapped reads outputted in Fastx format.
+- `--outSAMtype BAM Unsorted`: Format output is unsorted BAM.
+- `--outReadsUnmapped Fastx`: unmapped reads output in Fastx format.
 - `--alignIntronMin 20 and --alignIntronMax 1000000`: Minimum and maximum intron lengths for alignment.
 
 Samtools
