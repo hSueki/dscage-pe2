@@ -2,12 +2,12 @@
 
 A complete analytical framework tailored for the analysis of direct cDNA CAGE data.
 
-**Authors:** Diane Delobel<sup>1</sup>, Hiromi Nishiyori-Sueki<sup>1</sup>, Ilaria Nisoli<sup>2</sup>, Hideya Kawaji<sup>x</sup>,  Pauline Robbe<sup>1</sup> ,Piero Carninci<sup>1,2</sup>, Hazuki Takahashi<sup>1</sup>
+**Authors:** Diane Delobel<sup>1</sup>, Hiromi Nishiyori-Sueki<sup>1</sup>, Ilaria Nisoli<sup>2</sup>, Hideya Kawaji<sup>3</sup>,  Pauline Robbe<sup>1</sup> ,Piero Carninci<sup>1,2</sup>, Hazuki Takahashi<sup>1</sup>
 <br />
 
 1: RIKEN Center for Integrative Medical Sciences (IMS), Yokohama, 230-0045, Japan <br/>
 2: Human Technopole Research Center for Genomics, Milan, 20157, Italy<br/>
-x: Kawaji-san<br/>
+3: Tokyo Metropolitan Institute of Medical Science, Research Center for Genome & Medical Sciences, Tokyo, 156-8506, Japan <br/>
 
 
 
@@ -460,11 +460,11 @@ Outputs:
 <br/>
 
 ### ix. Generating peak file from single-nucleotide CTSS
-This step performs generates a peak file using all single-nucleotide CTSS files of a given project performs peak calling using the Paraclu algorithm, which is commonly employed for clustering and peak detection in genomic data analysis pipelines. Counts for each peak is detailed per sample.
+This step generates a peak file using all single-nucleotide CTSS files of a given project, calling peaks using the Paraclu algorithm, which is commonly employed for clustering and peak detection in genomic data analysis pipelines. Counts for each peak is detailed per sample.
 
 
 Input:
-- All CTSS files in the same project: map/_sample_.R1.ctss.bed, which are concatenated and formatted into a four-column peak BED file.
+- All CTSS files in the same project: map/_sample_.R1.ctss.bed, are concatenated and formatted into a four-column peak BED file.
 
 Tools:
 - [Paraclu and paraclu-cut.sh](https://gitlab.com/mcfrith/paraclu)
