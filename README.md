@@ -63,12 +63,12 @@ A complete analytical framework tailored for the analysis of direct cDNA CAGE da
 
 <br/>
 
-3. Prepare fasta and bed files
+3. Prepare FASTA and BED files
    
 	**In the case of Human and Mouse data**<br />
 	- Download the archived reference and save on your local directory.<br />
 		  Extract the reference using the tar command.　<br />
-		  This archive contains annotation bed files and rDNA.fa for Human/Mouse.
+		  This archive contains annotation BED files and rDNA.fa for Human/Mouse.
 	```shell
 		tar -zxvf hg38.tar.gz
 	```
@@ -95,12 +95,12 @@ A complete analytical framework tailored for the analysis of direct cDNA CAGE da
 
 	        Save these BED files to `/path/to/reference/hierarchical_intersect/`<br/>
 >[!NOTE]
->When you cannot prepare these annotation bed files, you can still run the pipeline and obtain simple results without annotating the CAGE tags. 
+>When you cannot prepare these annotation BED files, you can still run the pipeline and obtain simple results without annotating the CAGE tags. 
 <br/>
 
 4. Create the STAR index
 
-	Save the fasta file of genome as `/path/to/reference/STAR/genome.fa`. <br/>
+	Save the FASTA file of genome as `/path/to/reference/STAR/genome.fa`. <br/>
    You will also need to create a STAR index.
 
 	Start Docker or Singularity container with mounted reference directory.
@@ -126,7 +126,7 @@ Within the container, run the following commands to generate the STAR index.
 
 >[!NOTE]
 > It takes time to create the STAR index.<br/>
-> Please refer to STAR documentation on how to prepare the STAR index.<br/>
+> Please refer to the STAR documentation on how to prepare the STAR index.<br/>
 
 
 >[!CAUTION]
