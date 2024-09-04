@@ -385,7 +385,7 @@ Since in STAR, paired-end reads are treated as a single read, the paired-end rea
 
  				 		
 ### vi. BAM to CTSS with G correction
- This step performs a conversion of the BAM file into a CTSS BED file while applying a G correction to account for incorrect G in first base, based on the supplementary note 3e of Nature genet 38:626-35.
+ This step performs a conversion of the BAM file into a CTSS BED file while applying a G correction to account for incorrect G in first base, based on the supplementary note 3e of Nature genetics 38:626-35.
 
 
 Input:
@@ -403,7 +403,7 @@ Outputs:
 |Directory|File|Description|
 |----|----|----|
 |map/|_sample_.R1.ctss.bed| 1G-corrected CTSS BED file. The output is formatted as BED (for CTSS), where names represent internal scores and the score represent the corrected counts. The columns are as follow: <br />col1: Chromosome <br /> col2: Start position <br />col3: End position <br />col4: name: contains multiple sub-fields separated by commas. Each sub-field provides specific information:<br />- **X**: Observed read counts corresponding to the CTSS.<br />- **A0**: Counts of reads that are observed in this CTSS, with an extra G mismatching to the genome.<br />- **Nuc**: The nucleotide observed at the CTSS position.<br />- **State**: Indicates the state of the CTSS (Start, Generic, End, or Other).<br />- **A**: Counts of reads that are observed in this CTSS, with an extra G.<br />- **N**: Corrected read counts corresponding to the CTSS.<br />- **U**: Counts of reads that are observed in this CTSS, without an extra G.<br />- **F**: The counts of reads that are observed in this CTSS but expected to belong to the next (1bp downstream) CTSS.<br />col5: Corrected Counts: Represents the corrected read counts corresponding to the CTSS after applying corrections.<br />col6: Strand|
-|summary/|mapping.txt|mapping summary for all samples which includes the following counts of reads: raw, trimmed_adapters_Nsequences,paired, mapq10, multimap, unmapped, and rRNA.|
+|summary/|mapping.txt|mapping summary for all samples which includes the following counts of reads: raw, trimmed_adapters_Nsequences, paired, mapq10, multimap, unmapped, and rRNA.|
 |tmp/|_sample_.mapsummary.txt|Making a Mapping summary file which includes the following counts of reads: raw, trimmed_adapters_Nsequences,paired, mapq10, multimap, unmapped, and rRNA.|
 |summary/|STARsummary_perc.txt|mapping summary for all samples which includes the Statistics from STAR, including input: total number of input reads processed by the aligner; mapq10: % of reads that were mapped with a mapping quality (MAPQ) score of 10 or higher; multi: % of reads that mapped to multiple genomic locations; too_many: % of reads that mapped to too many genomic locations, possibly indicating a problem with mapping specificity; unmap_mismatch: % of reads that were unmapped due to mismatches with the reference genome; unmap_short: % of reads that were too short to be mapped.; unmap_other: % of unmapped reads due to reasons other.|
 |tmp/|sample.STARsummary_perc.txt|Statistics from STAR, including input: total number of input reads processed by the aligner; mapq10: % of reads that were mapped with a mapping quality (MAPQ) score of 10 or higher; multi: % of reads that mapped to multiple genomic locations; too_many: % of reads that mapped to too many genomic locations, possibly indicating a problem with mapping specificity; unmap_mismatch: % of reads that were unmapped due to mismatches with the reference genome; unmap_short: % of reads that were too short to be mapped.; unmap_other: % of unmapped reads due to reasons other.|
@@ -413,7 +413,10 @@ Outputs:
 		
 
 ### vii. Hierarchical Intersection
-The CTSS files are filtered and annotated using hierarchical_intersect. This tool intersects with each annotation bed file in a hierarchical manner the several regions stored as BED files in /usr/local/reference/hierarchical_intersect : upstream100, 5UTR_exon, coding_exon, 3UTR_exon, intron and downstream100. When the annotation bed files are not found, this step will be skipped.
+The CTSS files are filtered and annotated using hierarchical_intersect. This tool intersects with each annotation bed file in a hierarchical manner using several BED files located in /usr/local/reference/hierarchical_intersect : upstream100, 5UTR_exon, coding_exon, 3UTR_exon, intron and downstream100. 
+
+>[!NOTE]
+If the path of the BED files is not found, this step will be skipped.
 
 Input:
 - CTSS file: tmp/_sample_.R1.ctss.bed
@@ -456,34 +459,34 @@ Parameters:
 Outputs:
 |Directory|File|Description|
 |----|----|----|
-|map/|_sample_.bed|BED12 file where the start position is the 5’' end of Read 1 and the end position is the 3' end of read 2. Columns 7-8 (thick coordinates) indicate where the contribution of read 1.Column 10-12 (BED12 blocks) indicate positions where the reads match.|
+|map/|_sample_.bed|BED12 file where the start position is the 5' end of Read 1 and the end position is the 3' end of read 2. Columns 7-8 (thick coordinates) indicate where the contribution of read 1.Column 10-12 (BED12 blocks) indicate positions where the reads match.|
 |map/|_sample_.CAGEscan.bed|Column 4 (cluster name): Lx_chr_strand_start_end with the chr,strand,start and end of the TSS single-linkage derived clusters, Column5 (score): number of input paired-end tags of the CAGEscan cluster
 <br/>
 
 ### ix. Generating peak file from single-nucleotide CTSS
-This step generates a peak file using all single-nucleotide CTSS files of a given project, calling peaks using the Paraclu algorithm, which is commonly employed for clustering and peak detection in genomic data analysis pipelines. Counts for each peak is detailed per sample.
+This step generates a peak file using all single-nucleotide CTSS files of a given project, calling peaks using the Paraclu algorithm, which is commonly employed for clustering and peak detection in genomic data analysis pipelines. Counts for each peak are detailed per sample.
 
 
 Input:
-- All CTSS files in the same project: map/_sample_.R1.ctss.bed, are concatenated and formatted into a four-column peak BED file.
+- All CTSS files in the same project: map/_sample_.R1.ctss.bed are concatenated and formatted into a four-column peak BED file.
 
 Tools:
 - [Paraclu and paraclu-cut.sh](https://gitlab.com/mcfrith/paraclu)
 
 Parameters:<br/>
-- `minValue = 10`: omits clusters where the sum of the data values in the cluster is less than minValue
-- `d = 2` (default) minimum density increase 
-- `l = 200` (default) maximum cluster length
+- `minValue = 10`: omits clusters where the sum of the data values in the cluster is less than minValue.
+- `d = 2` (default) minimum density increase.
+- `l = 200` (default) maximum cluster length.
 
 Outputs:
 |Directory|File|Description|
 |----|----|----|
-|map/|peak.bed|8-column file containing information about the peaks detected by the Paraclu algorithm. The columns are: Chromosome, start position, end position, peak name, the sum of the data values in the cluster, strand, the number of positions with data in the cluster, the cluster's "minimum density", and the cluster's "maximum density".|
+|map/|peak.bed|8-column file containing information about the peaks detected by the Paraclu algorithm. The columns are: Chromosome, start position, end position, peak name, the sum of the data values in the cluster, strand, the number of positions with data in the cluster, the cluster's 'minimum density', and the cluster's 'maximum density'.|
 |map/|_sample_.count.bed|7-column file containing the peak details (column 1-6) and the count number for this sample (column 7).|
 |map/|_sample_.txt|Peak name and count number for this sample. The first line contains the total counts.|
-|summary/|totals.txt|Number of raw counts of CTSSs, annotated ones and number of peaks per sample.|
+|summary/|totals.txt|Number of raw counts of CTSSs, annotated ones, and number of peaks per sample.|
 |figs/|ctss_counts.pdf|Bar plot where each bar represents the counts of clustered and raw CTSS for different samples.|
-|figs/|mapping_counts.pdf|Bar plot with stacked bars, where each bar represents the counts of different mapping statistics such as the counts of rRNA, unmatched pairs, removed post-trimming reads, unmapped reads, multimapped reads, and reads with MAPQ10 scores, in millions across different samples.|
+|figs/|mapping_counts.pdf|Bar plot with stacked bars, where each bar represents the counts of different mapping statistics such as the counts of rRNA, unmatched pairs, removed post-trimming reads, unmapped reads, multimapped reads, and reads with MAPQ10 scores in millions across different samples.|
 |figs/|mapping_percent.pdf|Bar plot with stacked bars, where each bar represents the percentage distribution of different mapping statistics for different samples.|
 
 <br/>
@@ -496,21 +499,21 @@ Outputs:
    
 |log/| |
 |----|----|
-|_sample_.Log.final.out|Log file of STAR|
-|_sample_.Log.out|Log file of STAR|
-|_sample_.Log.progress.out|Log file of STAR|
-|_sample_.R1.matchrRNA.fq.gz|removed rRNA sequence by rRNAdust (R1)|
-|_sample_.R2.matchrRNA.fq.gz|removed rRNA sequence by rRNAdust (R2)|
+|_sample_.Log.final.out| Final log file of STAR|
+|_sample_.Log.out|General log file of STAR|
+|_sample_.Log.progress.out|Progress log file of STAR|
+|_sample_.R1.matchrRNA.fq.gz|Removed rRNA sequence by rRNAdust (R1)|
+|_sample_.R2.matchrRNA.fq.gz|Removed rRNA sequence by rRNAdust (R2)|
 |_sample_.SJ.out.tab|Log file of STAR|
 
 |map/|  |
 |----|----|
-|peak.bed|peak file from single-nucleotide CTSS using paraclu (from all ctss files)|
-|_sample_.bed|BED12 read file converted from sample.mapq10.bam (R1+R2 reads)|
+|peak.bed|Peak file from single-nucleotide CTSS using paraclu (from all CTSS files)|
+|_sample_.bed|BED12 read file converted from sample.mapq10.bam (R1 + R2 reads)|
 |_sample_.mapq10.bam|After STAR mapping, sorted and filtered BAM file|
-|_sample_.R1.count.bed|counts for each peak|
-|_sample_.R1.count.txt|Output total counts|
-|_sample_.R1.ctss.bed|R1 G-corrected ctss file (starBam2GcorrectedCtss_nbg.sh)|
+|_sample_.R1.count.bed|Counts for each peak|
+|_sample_.R1.count.txt|Total count of peaks for R1|
+|_sample_.R1.ctss.bed|R1 G-corrected CTSS file (starBam2GcorrectedCtss_nbg.sh)|
 |_sample_.R1.mapq10.bam|Select R1 reads from sample.mapq10.bam|
 |_sample_.R1.mapq10.bam.bai|Indexed R1 reads|
 |_sample_.R2.mapq10.bam|Select R2 reads from sample.mapq10.bam|
@@ -520,12 +523,12 @@ Outputs:
 |summary/|  |
 |----|----|
 |mapping.txt|Summary of mapping reads taken from STAR's Log file|
-|promoter_counts.txt|Summary of hierarchical intersect|
-|_sample_.R1.top100_extracted.txt|containing top100 sequences passing rRNA removal|
-|_sample_.R1.top100_mapped.txt|containing top100 sequences from mapped(mapq10)|
-|_sample_.R1.top100_rRNA.txt|containing top100 sequences rRNA|
-|_sample_.R1.top100_unmapped.txt|containing top100 sequences from unmapped|
-|STARsummary_perc.txt|STAR% map file ( from STAR log files )|
-|total.txt|summary file for ctss-intersect-peak graph|
+|promoter_counts.txt|Summary of hierarchical intersection analysis|
+|_sample_.R1.top100_extracted.txt|Top 100 sequences passing rRNA removal|
+|_sample_.R1.top100_mapped.txt|Top 100 sequences passing mapq10|
+|_sample_.R1.top100_rRNA.txt|Top 100 rRNA sequences|
+|_sample_.R1.top100_unmapped.txt|Top 100 unmapped sequences|
+|STARsummary_perc.txt|STAR% map file (from STAR log files)|
+|total.txt|Summary file for ctss-intersect-peak graph|
 
 
