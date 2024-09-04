@@ -143,15 +143,15 @@ After the STAR index is generated, please exit the container.
 <br/>
 
 ## 3.	Input
-- The input files required are paired FASTQ files. The accepted naming convention for the FASTQ files is **_sample_.R1.fq.gz** and **_sample_.R2.fq.gz**.
-- The input files must be copied within a single input directory: `/path/input_fastq_dir/` <br/>
+- The input required are paired FASTQ files. The required naming convention for the FASTQ files is **_sample_.R1.fq.gz** and **_sample_.R2.fq.gz**.
+- The input files must be placed in a single directory: `/path/input_fastq_dir/` <br/>
 
 ## 4.	Usage
 
-How to Set up and start Docker or Singularity
+How to set up and start Docker or Singularity
 
 **With Docker** 
-1. Run a Docker container using the loaded image (hsueki/dscage-pe2). Mount the reference and your local data directory to the container.
+1. Run a Docker container using the `hsueki/dscage-pe2` image. Mount the reference and your local data directory to the container.
 ```
   docker run -it \
     --mount type=bind,source=/path/to/reference,target=/usr/local/reference \
