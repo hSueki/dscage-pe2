@@ -151,7 +151,7 @@ After the STAR index is generated, please exit the container.
 How to set up and start Docker or Singularity
 
 **With Docker** 
-1. Run a Docker container using the `hsueki/dscage-pe2` image. Mount the reference and your local data directory to the container.
+1. Run a Docker container using the `hsueki/dscage-pe2` image. Mount the reference and your local data directories to the container.
 ```
   docker run -it \
     --mount type=bind,source=/path/to/reference,target=/usr/local/reference \
@@ -159,17 +159,17 @@ How to set up and start Docker or Singularity
     ghcr.io/hsueki/dscage_pe2
 ```
 >[!IMPORTANT]
->The path of target directories should not be changed.
+>The paths to the target directories should not be changed.
 
 >[!NOTE]
->The Slurm (a job scheduling and management system) is started automatically within the container. You can verify this by running `sinfo`.
+>Slurm (a job scheduling and management system) starts automatically within the container. You can verify this by running `sinfo`.
 >Please refer to [Slurm manual](https://slurm.schedmd.com/documentation.html).
 
 <br/>
 
-_Within the docker container_ 
+_Within the Docker container_ 
 
-2. Change directory into the target directory 
+2. Change to the target directory. 
 ```
  cd /root/data
 ```
@@ -179,25 +179,25 @@ _Within the docker container_
  CAGE_PE_pipeline.sh -s 8 -c 4 -t 8
 ```
 
-4. Once the pipeline is finished the Docker can be closed.
+4. Once the pipeline is finished, the Docker container can be closed.
 <br/>
 
 **With Singularity**
 
-1. Shell in the Singularity container image file `dscage-pe2.sif` containing the entire environment:
+1. Enter the Singularity container image file `dscage-pe2.sif`, which contains the entire environment:
 ```
  singularity shell --writable --bind /path/to/reference:/usr/local/reference \
              dscage_pe2_latest.sif
 ```
 
-_Within the singularity container_
+_Within the Singularity container_
 
 2. Set up and start a Slurm cluster
 ```
  /etc/start-slurm-services.sh
 ```
 
-3. Change the current directory to the directory containing the input fastq files
+3. Change to the directory containing the input FASTQ files.
 ```
  cd /path/input_fastq_dir/
 ```
@@ -207,7 +207,7 @@ _Within the singularity container_
  CAGE_PE_pipeline.sh -s 8 -c 4 -t 8
 ```
 
-5. Once the pipeline is finished, the Docker can be closed, but stop the local-slurm service before exit container.
+5. Once the pipeline is finished, first stop the local Slurm service before exiting the Docker container.
 ```
 /etc/stop-slurm-services.sh
 
@@ -220,13 +220,13 @@ exit
 **CAGE_PE_pipeline.sh -s number_of_samples -c concurrent_samples_to_process -t number_of_threads**
 
 Options:
-- `-s` number_of_samples (mandatory): Specify the number of samples (numeric value).
-- `-c` concurrent_samples_to_process (mandatory): Specify the number of concurrent jobs to be processed (numeric value).
-- `-t` number_of_threads (optional): Specify the number of threads (numeric value). If not provided, it defaults to 8.
+- `-s` number_of_samples (mandatory): Specifies the number of samples (a numeric value).
+- `-c` concurrent_samples_to_process (mandatory): Specifies the number of concurrent jobs to be processed (a numeric value).
+- `-t` number_of_threads (optional): Specifies the number of threads (a numeric value). Defaults to 8 if not provided.
 
 
-After submitting jobs using this pipeline, you can check their status and cancel them if necessary, using the following commands: `squeue`, `scancel`.
-For detailed information and usage, please refer to the [Slurm manual](https://slurm.schedmd.com/documentation.html).
+After submitting jobs with this pipeline, you can check their status or cancel them using the following commands: `squeue`, `scancel`.
+For detailed usage information, please refer to the [Slurm manual](https://slurm.schedmd.com/documentation.html).
 
 <br/>
 
