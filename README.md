@@ -242,11 +242,11 @@ The pipeline is structured to perform the following steps in sequence:
 	  vi. BAM to CTSS with G correction
 	 vii. Hierarchical Intersection
 	viii. Analysis of Paired BAM files
-	  iX. Generating peak file from single-nucleotide CTSS
+	  ix. Generating peak file from single-nucleotide CTSS
 
 ### i. Raw base distribution and quality score distribution calculation
 
-This step generates QC plots to examine the raw base distribution and raw quality score distribution for read 1 (R1) and read 2 (R2).
+This step generates QC plots to examine the raw base and quality score distributions for read 1 (R1) and read 2 (R2).
 
 Inputs:
 - _sample_.R1.fq.gz
@@ -268,7 +268,7 @@ Figures presenting the raw base and raw quality score distribution for read 1 (R
 
 ### ii. Sequence trimming
 
-This process consists in trimming of low-quality base calls from the end of the reads (Phred score > 30), adapter removal (based on a comprehensive list of standard adapters), filtering of reads contains any “Ns” and short sequence filtering (< 15 bp).
+This process involves trimming low-quality bases from the ends of reads (Phred score > 30), removing adapters (based on a comprehensive list of standard adapters), filtering out reads containing any 'N's and discarding short sequences (< 15 bp).
 
 
 Inputs:
@@ -290,20 +290,20 @@ trim_galore main parameters used:
 Outputs:
 |Directory|File|Description|
 |-----|----|----|
-|figs/QC/|_sample_.R1.baseN_distribution.png<br />_sample_.R2.baseN_distribution.png|distribution of base N (uncertain or ambiguous bases) across the sequences in the input FASTQ files
+|figs/QC/|_sample_.R1.baseN_distribution.png<br />_sample_.R2.baseN_distribution.png|distribution of base 'N' (uncertain or ambiguous bases) across the sequences in the input FASTQ files
 |tmp/|_sample_.R1_val_1.fq<br />_sample_.R2_val_2.fq|Trimmed and filtered FASTQ files|
 
  
 
 ### iii. rRNA sequences removal
 
-This portion of the script is responsible for removing sequences that match ribosomal RNA (rRNA) sequences.
+This step removes sequences that match ribosomal RNA (rRNA).
 
 Inputs:
 - tmp/_sample_.R1_val_1.fq
 - tmp/_sample_.R2_val_2.fq
 - Sequences of ribosomal RNAs (../reference/ribosomalRNA/rDNA.fa):
-    - Human ribosomal DNA complete repeating unit: ([Accession U13369; Version U13369.1](https://www.ncbi.nlm.nih.gov/nuccore/555853))
+    - Human ribosomal DNA complete repeating unit ([Accession U13369; Version U13369.1](https://www.ncbi.nlm.nih.gov/nuccore/555853))
     - TPA_exp: Mus musculus ribosomal DNA, complete repeating unit ([Accession BK000964; Version BK000964.1](https://www.ncbi.nlm.nih.gov/nuccore/BK000964.1))
 
 Tools:
@@ -317,14 +317,14 @@ Outputs:
 |summary/ |_sample_.R1.top100_rRNA.txt<br />_sample_.R2.top100_rRNA.txt          |Top100 sequences matched to rRNA.                        |
 |summary/ |_sample_.R1.top100_extracted.txt<br />_sample_.R2.top100_extracted.txt|Top100 sequences extracted                               |
 |tmp/     |_sample_.R1.matchrRNA.fq<br />_sample_.R2.matchrRNA.fq                |Pair of FASTQ files containing the filtered out rRNA data|
-|tmp/     |_sample_.R1.norRNA.fq<br />_sample_.R2.norRNA.fq                      |pair of FASTQ files contains the data without rRNA       |
+|tmp/     |_sample_.R1.norRNA.fq<br />_sample_.R2.norRNA.fq                      |Pair of FASTQ files containing the data without rRNA       |
 |log/     |_sample_.R1.matchrRNA.fq.gz<br />_sample_.R2.matchrRNA.fq.gz          |Pair of FASTQ files containing the filtered out rRNA data|
 
   
 
 ### iv. Paired-end reads matching
 
-This step matches and selects paired sequences by comparing the original FASTQ file pairs to the filtered FASTQ file pairs.
+This step matches and selects paired sequences by comparing the original FASTQ file pairs to the rRNA-filtered FASTQ file pairs.
 
 Inputs:
 - _sample_.R1.fq.gz: Input R1 FASTQ file (original).
