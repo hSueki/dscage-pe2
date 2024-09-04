@@ -155,7 +155,7 @@ How to set up and start Docker or Singularity
 ```
   docker run -it \
     --mount type=bind,source=/path/to/reference,target=/usr/local/reference \
-    --mount type=bind,source=/path/input_fastq_dir,target=/root/data \  
+    --mount type=bind,source=/path/input_fastq_dir,target=/root/data \
     ghcr.io/hsueki/dscage_pe2
 ```
 >[!IMPORTANT]
@@ -344,11 +344,11 @@ Output:
 
 ### v. Mapping with STAR
 
-Sequences are mapped with STAR (2.7.4a). Mapped data is then sorted with read name, filtered to retain properly mapped reads (MAPQ > 10). Reads from the filtered BAM file that are the first and second mates of a pair (R1 and R2 reads) are selected, sorted by coordinates and indexed.
+Sequences are mapped with STAR (2.7.4a). Mapped data are then sorted by read name and filtered to retain properly mapped reads (MAPQ > 10). Reads from the filtered BAM file that are the first and second mates of a pair (R1 and R2 reads) are selected, sorted by coordinates, and indexed.
 
 Inputs:
 - Genome: Specifies the genome being used (genome.fa)
-- tmp/_sample_.R1.paired.fq and tmp/_sample_.R2.paired.fq: Paired-end FASTQ files after rRNA removal and read matching. 
+- tmp/_sample_.R1.paired.fq and tmp/_sample_.R2.paired.fq: These are paired-end FASTQ files after rRNA removal and read matching. 
 
 Tools:
 - [STAR (2.7.4a)](https://github.com/alexdobin/STAR/releases/tag/2.7.4a)
@@ -358,12 +358,12 @@ Tools:
 Parameters:
 STAR
 - `--outFilterMultimapNmax 20`: Maximum number of multiple alignments allowed per read.
-- `--outSAMtype BAM Unsorted`: Format output is unsorted BAM.
-- `--outReadsUnmapped Fastx`: unmapped reads output in Fastx format.
+- `--outSAMtype BAM Unsorted`: Output format is unsorted BAM.
+- `--outReadsUnmapped Fastx`: Unmapped reads output in Fastx format.
 - `--alignIntronMin 20 and --alignIntronMax 1000000`: Minimum and maximum intron lengths for alignment.
 
 Samtools
-- `-bSq 10`: Reads with a MAPQ score greater than 10 are kept
+- `-bSq 10`: Only reads with a MAPQ score greater than 10 are retained.
 - `-f 0x2`, `-F 0x104`, `-f 0x40`, `-f 0x80`: Filters reads based on flags to select properly mapped reads and exclude non-primary alignments and unmapped reads.
 
 Outputs:
@@ -374,12 +374,13 @@ Outputs:
 |map/       |_sample_.R1.mapq10.bam<br />_sample_.R1.mapq10.bam.bai<br />_sample_.R2.mapq10.bam                                           |Sorted and indexed BAM files for R1 and R2 reads
 |map/       |_sample_.Unmapped.out.mate1<br />_sample_.Unmapped.out.mate2                                                                   |Unmapped reads in Fastx format
 |summary/   |_sample_.R1.top100_unmapped.txt<br />_sample_.R2.top100_unmapped.txt<br />_sample_.R1.top100_mapped.txt<br />_sample_.R2.top100_mapped.txt    |Top 100 sequences from mapped and unmapped files
-|log/       |_sample_.Log.final.out|Statistics from STAR: Number of input reads<br/> Number and % of : <br/>- Uniquely mapped reads<br/> - reads mapped to multiple loci<br/>- reads mapped to too many loci<br/> - reads unmapped: too many mismatches<br/> - reads unmapped: too short<br> - reads unmapped: other|
+|log/       |_sample_.Log.final.out|Statistics from STAR: Number of input reads<br/>, Number and % of : <br/>- Uniquely mapped reads<br/> - reads mapped to multiple loci<br/>- reads mapped to too many loci<br/> - reads unmapped: too many mismatches<br/> - reads unmapped: too short<br> - reads unmapped: other|
 |log/      |_sample_.Log.out|Description of the execution of the STAR, including command line parameters, initial and final user parameters, effective command line, genome generation parameters and genome information.
-|log/      |_sample_.Log.progress.out|time-stamped record of progress during a process
-|log/      |_sample_.SJ.out.tab|List of the splice junctions detected during the alignment process. <br />The columns are as follow:   <br />Chromosome: Chromosomal location of the splice junction; <br />Start: Starting position of the splice junction; <br />End: Ending position of the splice junction; <br />Strand: Orientation of the splice junction; <br />Intron Motif: Represents the splice junction's motif, with "0" indicating unknown motif; <br />Support: Number of reads supporting the splice junction; <br />Annotated: Indicates whether the splice junction is annotated or novel.; <br />Unique: Indicates whether the splice junction is unique or shared; <br />Overhang: Length of the overhang.
+|log/      |_sample_.Log.progress.out|Time-stamped record of progress during a process
+|log/      |_sample_.SJ.out.tab|List of the splice junctions detected during the alignment process. <br />The columns are as follow:   <br />Chromosome: Chromosomal location of the splice junction; <br />Start: Starting position of the splice junction; <br />End: Ending position of the splice junction; <br />Strand: Orientation of the splice junction; <br />Intron Motif: Represents the splice junction's motif, with "0" indicating unknown motif; <br />Support: Number of reads supporting the splice junction; <br />Annotated: Indicates whether the splice junction is annotated or novel. <br />Unique: Indicates whether the splice junction is unique or shared; <br />Overhang: Length of the overhang.
 
-Of note, since in STAR, paired-end reads are treated as a single read,  the paired-end reads are counted as a single read in the uniquely mapped reads number. The uniquely mapped reads number also includes reads in which only one of the paired-end reads is uniquely mapped.  The file containing the top 100 sequences from mapped and unmapped files was generated.
+>[!NOTE]
+Since in STAR, paired-end reads are treated as a single read, the paired-end reads are counted as a single read in the uniquely mapped reads number. The uniquely mapped reads number also includes reads in which only one of the paired-end reads is uniquely mapped. The file containing the top 100 sequences from mapped and unmapped files was generated.
 
 
  				 		
