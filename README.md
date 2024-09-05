@@ -232,7 +232,7 @@ For detailed usage information, please refer to the [Slurm manual](https://slurm
 
 >[!TIP]
 >The map/_sample_.R1.ctss.bed file output by this pipeline can be used for further analysis in [CAGEr](https://bioconductor.org/packages/devel/bioc/vignettes/CAGEr/inst/doc/CAGEexp.html). <br/>
->The script **ctss_for_cager.sh** allows you to convert it to a format that can be used by CAGEr.
+>The script **ctss_for_cager.sh** converts the BED file to a format that can be used by CAGEr.
 
 
 <br/>
