@@ -1,4 +1,4 @@
-# dsCAGE: direct cDNA CAGE for paired-end patterned flowcell sequencing. 
+# Direct cDNA CAGE for paired-end patterned flowcell sequencing. 
 
 A complete analytical framework tailored for the analysis of direct cDNA CAGE data.
 
