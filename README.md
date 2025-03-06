@@ -1,4 +1,4 @@
-# Direct cDNA CAGE for paired-end patterned flowcell sequencing. 
+# Protocol for direct cDNA cap analysis of gene expression for paired-end patterned flow cell sequencing
 
 A complete analytical framework tailored for the analysis of direct cDNA CAGE data.
 
@@ -9,7 +9,9 @@ A complete analytical framework tailored for the analysis of direct cDNA CAGE da
 2: Human Technopole Research Center for Genomics, Milan, 20157, Italy<br/>
 3: Tokyo Metropolitan Institute of Medical Science, Research Center for Genome & Medical Sciences, Tokyo, 156-8506, Japan <br/>
 
-
+### Citation
+Delobel et al., STAR Protocols 6, 103594 March 21, 2025
+DOI: [https://doi.org/10.1016/j.xpro.2024.103594](https://doi.org/10.1016/j.xpro.2024.103594)
 
 ### Table of contents
 
